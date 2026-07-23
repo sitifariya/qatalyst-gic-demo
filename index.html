@@ -53,7 +53,8 @@ align-items:center;font-size:11.8px;line-height:1.35;border-bottom:1px solid var
 .crow.hi{background:rgba(124,58,237,.07)}
 .chead{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
 color:var(--mut);border-bottom:1px solid var(--line)}
-.cn{font-weight:700;border-left:3px solid;padding-left:9px}
+.cn{font-weight:700;border-left:3px solid;padding-left:9px;line-height:1.25}
+.cn i{font-weight:400;font-style:normal;font-size:10px;color:var(--mut)}
 .good{color:#059669;font-weight:600}.bad{color:#B45309}.ok{color:var(--dim)}
 @media(max-width:900px){.crow{grid-template-columns:1fr;gap:2px}}
 .brow{display:grid;grid-template-columns:172px 1fr 132px;align-items:center;gap:10px;margin:5px 0}
@@ -85,13 +86,14 @@ border-radius:4px;display:inline-block}
 .ecert{font-size:12px;color:var(--mut)}
 .ecol ul{margin:13px 0 11px 18px;padding:0;font-size:13px;color:var(--dim)}.ecol li{margin:6px 0}
 .efoot{font-size:13px;font-weight:600;border-top:1px solid var(--line);padding-top:9px;margin-top:4px}
-.vbars{padding:14px 16px 6px;flex:1;display:flex;flex-direction:column;justify-content:center;gap:13px}
+.vbars{padding:9px 14px 4px;flex:1;display:flex;flex-direction:column;justify-content:center;gap:7px;overflow:auto}
 .vrow{display:grid;grid-template-columns:1fr;gap:3px}
 .vlab{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--dim)}
 .vlab b{font-family:var(--mono);font-size:15px;color:var(--ink)}
-.vtrack{background:var(--bg);border-radius:5px;height:26px;overflow:hidden}
-.vfill{height:100%;border-radius:5px;display:flex;align-items:center;justify-content:flex-end;
-padding-right:8px;color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.06em}
+.vtrack{background:var(--bg);border-radius:4px;height:15px;overflow:hidden;margin-top:2px}
+.vtrack.mini{height:14px}
+.vfill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;
+padding-right:6px;color:#fff;font-family:var(--mono);font-size:8.5px;letter-spacing:.04em;white-space:nowrap}
 .vscale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;
 color:var(--mut);border-top:1px solid var(--line);padding-top:4px;margin-top:2px}
 .ledger{padding:6px 14px 4px;flex:1;display:flex;flex-direction:column;justify-content:center}
@@ -164,27 +166,28 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
       <div class="panel"><div class="phead">2 · What it cost to get there</div>
         <div class="costs">
           <div class="crow chead"><span>Method</span><span>Setting it up</span><span>People</span><span>Answer time</span></div>
-          <div class="crow"><span class="cn" style="border-color:#2563EB">Exact solver</span>
+          <div class="crow"><span class="cn" style="border-color:#2563EB">Exact solver<br><i>MILP</i></span>
             <span class="bad">Days · a specialist rewrites the problem into another form</span>
             <span class="bad">£5k–£20k</span><span>120 s</span></div>
-          <div class="crow hi"><span class="cn" style="border-color:#7C3AED">Quantum hybrid</span>
+          <div class="crow hi"><span class="cn" style="border-color:#7C3AED">Quantum hybrid<br><i>D-Wave Stride</i></span>
             <span class="good">Hours · an engineer writes the problem down as it is</span>
             <span class="good">£0.5k–£2k</span><span>120 s + wait</span></div>
-          <div class="crow"><span class="cn" style="border-color:#059669">Smart shortcut</span>
+          <div class="crow"><span class="cn" style="border-color:#059669">Greedy<br><i>classical</i></span>
             <span class="ok">Hours · but the answer is 6 MW worse</span>
             <span class="ok">£0.5k–£1.5k</span><span>20–30 s</span></div>
-          <div class="crow"><span class="cn" style="border-color:#D97706">General search</span>
+          <div class="crow"><span class="cn" style="border-color:#D97706">Simulated<br>annealing</span>
             <span class="ok">Hours · answer is 10 MW worse</span>
             <span class="ok">£0.5k–£1.5k</span><span>120 s</span></div>
         </div>
         <div class="note">Illustrative UK contractor rates. All four still need someone technical: none is
         usable by the planner who owns the decision. That gap is what our engine closes.</div>
       </div>
-      <div class="panel"><div class="phead">3 · What you pay, against what you get back</div>
+      <div class="panel"><div class="phead">3 · All four methods: what you pay, what you get back</div>
         <div class="vbars" id="vbars"></div>
-        <div class="note"><b style="color:var(--ink)">Each step across is ten times bigger.</b>
-        The cost bar is real, it is just too small to see next to the value. The constraint is never the
-        money, it is whether the right person is available.</div>
+        <div class="note"><b style="color:var(--ink)">Log scale: each step across is ten times bigger.</b>
+        Value is what that method's plan is worth over 20 years compared with the weakest method here.
+        Every route pays for itself hundreds of times over, so the constraint is never money, it is whether
+        the right person is available.</div>
     </div>
   </div>
 </div>
@@ -214,7 +217,7 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
   <div class="panel grow"><div class="phead">Same answer, very different price of entry</div>
   <div class="exp">
     <div class="ecol">
-      <div class="etag" style="background:#2563EB">THE EXACT METHOD, IF YOU HAVE A SPECIALIST</div>
+      <div class="etag" style="background:#2563EB">THE EXACT METHOD (MILP), IF YOU HAVE A SPECIALIST</div>
       <b class="big">9,738 MW</b><span class="ecert">and a mathematical proof that nothing beats it</span>
       <ul><li>Someone has to notice the problem can be rewritten into a form this solver understands</li>
       <li>Then build that rewrite correctly, and check it</li>
@@ -223,7 +226,7 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
       <div class="efoot">No specialist on the team? This option disappears.</div>
     </div>
     <div class="ecol">
-      <div class="etag" style="background:#7C3AED">THE QUANTUM HYBRID, IF YOU DON'T</div>
+      <div class="etag" style="background:#7C3AED">THE QUANTUM HYBRID (D-WAVE STRIDE), IF YOU DON'T</div>
       <b class="big">9,738 MW</b><span class="ecert">same score, no proof, no rewrite</span>
       <ul><li>You describe the problem the way it actually is, and hand it over</li>
       <li>No rewriting, no mathematical translation</li>
@@ -240,12 +243,12 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
   We report the other six just as clearly.</div>
   <div class="panel grow"><div class="scroll"><table>
   <tr><th>Kind of problem</th><th>What wins</th><th>What we measured</th></tr>
-  <tr><td>Easy version: just make the average day better</td><td>Cheap shortcut method</td><td>Gets 99.6% of the best possible in 2.2 seconds. Nothing can beat it, so nothing should try.</td></tr>
-  <tr><td>Hard version, and you have a specialist</td><td>Exact solver</td><td>Finds the best possible answer and proves it. Wins or ties every fair race.</td></tr>
-  <tr class="hot"><td>Hard version, and you don't have a specialist</td><td>Quantum hybrid</td><td>Beat every conventional method 5 times out of 5, and matched the proven best answer. This is quantum's region.</td></tr>
-  <tr><td>Hardest version: batteries can accidentally make some lines worse</td><td>Cheap shortcut method</td><td>The exact solver collapses completely here. The hybrid ties the shortcut method almost exactly.</td></tr>
-  <tr><td>Splitting the grid into self-sufficient islands</td><td>Specialist shortcut</td><td>A free method scores better in under a second than the hybrid does. Exact solvers time out entirely.</td></tr>
-  <tr><td>Delivery van routing</td><td>Ordinary classical software</td><td>Reached the mathematically proven best route. The quantum hybrid came 0.13% behind.</td></tr>
+  <tr><td>Easy version: just make the average day better</td><td>Greedy, a classical algorithm</td><td>Gets 99.6% of the best possible in 2.2 seconds. Nothing can beat it, so nothing should try.</td></tr>
+  <tr><td>Hard version, and you have a specialist</td><td>Exact solver (MILP)</td><td>Finds the best possible answer and proves it. Wins or ties every fair race.</td></tr>
+  <tr class="hot"><td>Hard version, and you don't have a specialist</td><td>Quantum hybrid (D-Wave Stride)</td><td>Beat every conventional method 5 times out of 5, and matched the proven best answer. This is quantum's region.</td></tr>
+  <tr><td>Hardest version: batteries can accidentally make some lines worse</td><td>Greedy, a classical algorithm</td><td>The exact solver collapses completely here. The hybrid ties the shortcut method almost exactly.</td></tr>
+  <tr><td>Splitting the grid into self-sufficient islands</td><td>Specialist graph algorithm</td><td>A free method scores better in under a second than the hybrid does. Exact solvers time out entirely.</td></tr>
+  <tr><td>Delivery van routing</td><td>Classical routing software (OR-Tools)</td><td>Reached the mathematically proven best route. The quantum hybrid came 0.13% behind.</td></tr>
   <tr><td>Running directly on quantum hardware</td><td>Not possible yet</td><td>Needs around 31,000 qubits for this grid. Today's machines don't have them.</td></tr>
   </table></div>
   <div class="note">Three of these seven are won by cheap classical methods, and we say so. A map of where a
@@ -281,7 +284,7 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
 <script>
 const GRID = {"buses": [{"id": "Bus1", "load": 51.0, "lat": 40.6575, "lon": -84.6}, {"id": "Bus2", "load": 20.0, "lat": 40.7239, "lon": -84.5223}, {"id": "Bus3", "load": 39.0, "lat": 40.5481, "lon": -84.469}, {"id": "Bus4", "load": 39.0, "lat": 40.3527, "lon": -84.4355}, {"id": "Bus5", "load": 0.0, "lat": 40.3642, "lon": -84.3461}, {"id": "Bus6", "load": 52.0, "lat": 40.4182, "lon": -84.5022}, {"id": "Bus7", "load": 19.0, "lat": 40.5823, "lon": -84.5119}, {"id": "Bus8", "load": 28.0, "lat": 40.2453, "lon": -84.095}, {"id": "Bus9", "load": 0.0, "lat": 40.0673, "lon": -84.2498}, {"id": "Bus10", "load": 0.0, "lat": 39.9413, "lon": -84.3684}, {"id": "Bus11", "load": 70.0, "lat": 40.4524, "lon": -84.3394}, {"id": "Bus12", "load": 47.0, "lat": 40.6362, "lon": -84.3637}, {"id": "Bus13", "load": 34.0, "lat": 40.3836, "lon": -84.1838}, {"id": "Bus14", "load": 14.0, "lat": 40.5056, "lon": -84.1909}, {"id": "Bus15", "load": 90.0, "lat": 40.3439, "lon": -83.9944}, {"id": "Bus16", "load": 25.0, "lat": 40.6686, "lon": -84.145}, {"id": "Bus17", "load": 11.0, "lat": 40.6145, "lon": -83.9059}, {"id": "Bus18", "load": 60.0, "lat": 40.4374, "lon": -83.8965}, {"id": "Bus19", "load": 45.0, "lat": 40.2489, "lon": -83.8255}, {"id": "Bus20", "load": 18.0, "lat": 40.4685, "lon": -83.7251}, {"id": "Bus21", "load": 14.0, "lat": 40.6554, "lon": -83.6052}, {"id": "Bus22", "load": 10.0, "lat": 40.7879, "lon": -83.4823}, {"id": "Bus23", "load": 7.0, "lat": 40.8268, "lon": -83.3677}, {"id": "Bus24", "load": 13.0, "lat": 40.6026, "lon": -83.0492}, {"id": "Bus25", "load": 0.0, "lat": 40.8968, "lon": -83.5566}, {"id": "Bus26", "load": 0.0, "lat": 40.6075, "lon": -83.6728}, {"id": "Bus27", "load": 71.0, "lat": 41.1833, "lon": -83.6306}, {"id": "Bus28", "load": 17.0, "lat": 41.3287, "lon": -83.7437}, {"id": "Bus29", "load": 24.0, "lat": 41.2069, "lon": -83.8218}, {"id": "Bus30", "load": 0.0, "lat": 40.2839, "lon": -83.7707}, {"id": "Bus31", "load": 43.0, "lat": 40.9498, "lon": -83.8041}, {"id": "Bus32", "load": 59.0, "lat": 41.0044, "lon": -83.6162}, {"id": "Bus33", "load": 23.0, "lat": 40.0407, "lon": -83.8271}, {"id": "Bus34", "load": 59.0, "lat": 39.9332, "lon": -83.6911}, {"id": "Bus35", "load": 33.0, "lat": 39.6709, "lon": -83.7381}, {"id": "Bus36", "load": 31.0, "lat": 39.7718, "lon": -83.7806}, {"id": "Bus37", "load": 0.0, "lat": 39.7867, "lon": -83.6236}, {"id": "Bus38", "load": 0.0, "lat": 39.9157, "lon": -83.4635}, {"id": "Bus39", "load": 27.0, "lat": 39.5979, "lon": -83.5635}, {"id": "Bus40", "load": 66.0, "lat": 39.5597, "lon": -83.4308}, {"id": "Bus41", "load": 37.0, "lat": 39.4333, "lon": -83.3357}, {"id": "Bus42", "load": 96.0, "lat": 39.4419, "lon": -83.192}, {"id": "Bus43", "load": 18.0, "lat": 39.7832, "lon": -83.494}, {"id": "Bus44", "load": 16.0, "lat": 39.6621, "lon": -83.2822}, {"id": "Bus45", "load": 53.0, "lat": 39.5388, "lon": -83.061}, {"id": "Bus46", "load": 28.0, "lat": 39.5619, "lon": -82.9188}, {"id": "Bus47", "load": 34.0, "lat": 39.6095, "lon": -82.798}, {"id": "Bus48", "load": 20.0, "lat": 39.4584, "lon": -82.8601}, {"id": "Bus49", "load": 87.0, "lat": 39.3762, "lon": -82.898}, {"id": "Bus50", "load": 17.0, "lat": 39.1244, "lon": -82.845}, {"id": "Bus51", "load": 17.0, "lat": 39.0426, "lon": -82.7836}, {"id": "Bus52", "load": 18.0, "lat": 38.8209, "lon": -82.7078}, {"id": "Bus53", "load": 23.0, "lat": 38.723, "lon": -82.7839}, {"id": "Bus54", "load": 113.0, "lat": 38.9301, "lon": -82.8908}, {"id": "Bus55", "load": 63.0, "lat": 38.7, "lon": -82.921}, {"id": "Bus56", "load": 84.0, "lat": 38.7621, "lon": -82.8736}, {"id": "Bus57", "load": 12.0, "lat": 38.8952, "lon": -82.8236}, {"id": "Bus58", "load": 12.0, "lat": 38.8149, "lon": -82.7723}, {"id": "Bus59", "load": 277.0, "lat": 38.7898, "lon": -82.994}, {"id": "Bus60", "load": 78.0, "lat": 38.769, "lon": -83.1024}, {"id": "Bus61", "load": 0.0, "lat": 38.8983, "lon": -83.0976}, {"id": "Bus62", "load": 77.0, "lat": 38.9935, "lon": -83.1208}, {"id": "Bus63", "load": 0.0, "lat": 38.9435, "lon": -83.0555}, {"id": "Bus64", "load": 0.0, "lat": 39.1934, "lon": -83.0982}, {"id": "Bus65", "load": 0.0, "lat": 39.6138, "lon": -83.1012}, {"id": "Bus66", "load": 39.0, "lat": 39.2811, "lon": -83.0673}, {"id": "Bus67", "load": 28.0, "lat": 39.098, "lon": -83.1508}, {"id": "Bus68", "load": 0.0, "lat": 39.7412, "lon": -82.7252}, {"id": "Bus69", "load": 0.0, "lat": 39.8431, "lon": -82.6619}, {"id": "Bus70", "load": 66.0, "lat": 40.2869, "lon": -82.7719}, {"id": "Bus71", "load": 0.0, "lat": 40.591, "lon": -82.8058}, {"id": "Bus72", "load": 12.0, "lat": 40.6841, "lon": -82.9242}, {"id": "Bus73", "load": 6.0, "lat": 40.7941, "lon": -82.7653}, {"id": "Bus74", "load": 68.0, "lat": 40.2561, "lon": -82.6478}, {"id": "Bus75", "load": 47.0, "lat": 40.1009, "lon": -82.5577}, {"id": "Bus76", "load": 68.0, "lat": 40.1285, "lon": -82.3426}, {"id": "Bus77", "load": 61.0, "lat": 39.955, "lon": -82.3074}, {"id": "Bus78", "load": 71.0, "lat": 40.0524, "lon": -82.1933}, {"id": "Bus79", "load": 39.0, "lat": 40.1109, "lon": -82.0963}, {"id": "Bus80", "load": 130.0, "lat": 40.0197, "lon": -82.0347}, {"id": "Bus81", "load": 0.0, "lat": 39.8688, "lon": -82.3759}, {"id": "Bus82", "load": 54.0, "lat": 39.806, "lon": -81.9934}, {"id": "Bus83", "load": 20.0, "lat": 39.5776, "lon": -81.7436}, {"id": "Bus84", "load": 11.0, "lat": 39.4424, "lon": -81.6286}, {"id": "Bus85", "load": 24.0, "lat": 39.444, "lon": -81.5238}, {"id": "Bus86", "load": 21.0, "lat": 39.2128, "lon": -81.3982}, {"id": "Bus87", "load": 0.0, "lat": 39.0545, "lon": -81.3007}, {"id": "Bus88", "load": 48.0, "lat": 39.4513, "lon": -81.4083}, {"id": "Bus89", "load": 0.0, "lat": 39.6299, "lon": -81.4079}, {"id": "Bus90", "load": 163.0, "lat": 39.6442, "lon": -81.2815}, {"id": "Bus91", "load": 10.0, "lat": 39.7995, "lon": -81.3106}, {"id": "Bus92", "load": 65.0, "lat": 39.9387, "lon": -81.4394}, {"id": "Bus93", "load": 12.0, "lat": 39.9891, "lon": -81.4988}, {"id": "Bus94", "load": 30.0, "lat": 40.0211, "lon": -81.6074}, {"id": "Bus95", "load": 42.0, "lat": 39.9715, "lon": -81.707}, {"id": "Bus96", "load": 38.0, "lat": 39.9612, "lon": -81.8384}, {"id": "Bus97", "load": 15.0, "lat": 40.0158, "lon": -81.9251}, {"id": "Bus98", "load": 34.0, "lat": 40.128, "lon": -81.7672}, {"id": "Bus99", "load": 42.0, "lat": 40.1754, "lon": -81.7742}, {"id": "Bus100", "load": 37.0, "lat": 40.2348, "lon": -81.5101}, {"id": "Bus101", "load": 22.0, "lat": 40.1796, "lon": -81.3825}, {"id": "Bus102", "load": 5.0, "lat": 40.0402, "lon": -81.3345}, {"id": "Bus103", "load": 23.0, "lat": 40.4196, "lon": -81.2689}, {"id": "Bus104", "load": 38.0, "lat": 40.397, "lon": -81.3513}, {"id": "Bus105", "load": 31.0, "lat": 40.5556, "lon": -81.2491}, {"id": "Bus106", "load": 43.0, "lat": 40.4841, "lon": -81.3706}, {"id": "Bus107", "load": 50.0, "lat": 40.6466, "lon": -81.2894}, {"id": "Bus108", "load": 2.0, "lat": 40.6917, "lon": -81.1111}, {"id": "Bus109", "load": 8.0, "lat": 40.7208, "lon": -81.0064}, {"id": "Bus110", "load": 39.0, "lat": 40.5622, "lon": -81.0414}, {"id": "Bus111", "load": 0.0, "lat": 40.6674, "lon": -80.9103}, {"id": "Bus112", "load": 68.0, "lat": 40.5633, "lon": -80.9}, {"id": "Bus113", "load": 6.0, "lat": 40.8486, "lon": -83.7801}, {"id": "Bus114", "load": 8.0, "lat": 41.2708, "lon": -83.6084}, {"id": "Bus115", "load": 22.0, "lat": 41.4, "lon": -83.6243}, {"id": "Bus116", "load": 184.0, "lat": 39.6684, "lon": -82.629}, {"id": "Bus117", "load": 20.0, "lat": 40.8173, "lon": -84.4598}, {"id": "Bus118", "load": 33.0, "lat": 40.1854, "lon": -82.4417}], "lines": [{"a": "Bus1", "b": "Bus2", "cap": 9900.0}, {"a": "Bus1", "b": "Bus3", "cap": 9900.0}, {"a": "Bus4", "b": "Bus5", "cap": 9900.0}, {"a": "Bus3", "b": "Bus5", "cap": 9900.0}, {"a": "Bus5", "b": "Bus6", "cap": 9900.0}, {"a": "Bus6", "b": "Bus7", "cap": 9900.0}, {"a": "Bus8", "b": "Bus9", "cap": 9900.0}, {"a": "Bus9", "b": "Bus10", "cap": 9900.0}, {"a": "Bus4", "b": "Bus11", "cap": 9900.0}, {"a": "Bus5", "b": "Bus11", "cap": 9900.0}, {"a": "Bus11", "b": "Bus12", "cap": 9900.0}, {"a": "Bus2", "b": "Bus12", "cap": 9900.0}, {"a": "Bus3", "b": "Bus12", "cap": 9900.0}, {"a": "Bus7", "b": "Bus12", "cap": 9900.0}, {"a": "Bus11", "b": "Bus13", "cap": 9900.0}, {"a": "Bus12", "b": "Bus14", "cap": 9900.0}, {"a": "Bus13", "b": "Bus15", "cap": 9900.0}, {"a": "Bus14", "b": "Bus15", "cap": 9900.0}, {"a": "Bus12", "b": "Bus16", "cap": 9900.0}, {"a": "Bus15", "b": "Bus17", "cap": 9900.0}, {"a": "Bus16", "b": "Bus17", "cap": 9900.0}, {"a": "Bus17", "b": "Bus18", "cap": 9900.0}, {"a": "Bus18", "b": "Bus19", "cap": 9900.0}, {"a": "Bus19", "b": "Bus20", "cap": 9900.0}, {"a": "Bus15", "b": "Bus19", "cap": 9900.0}, {"a": "Bus20", "b": "Bus21", "cap": 9900.0}, {"a": "Bus21", "b": "Bus22", "cap": 9900.0}, {"a": "Bus22", "b": "Bus23", "cap": 9900.0}, {"a": "Bus23", "b": "Bus24", "cap": 9900.0}, {"a": "Bus23", "b": "Bus25", "cap": 9900.0}, {"a": "Bus25", "b": "Bus27", "cap": 9900.0}, {"a": "Bus27", "b": "Bus28", "cap": 9900.0}, {"a": "Bus28", "b": "Bus29", "cap": 9900.0}, {"a": "Bus8", "b": "Bus30", "cap": 9900.0}, {"a": "Bus26", "b": "Bus30", "cap": 9900.0}, {"a": "Bus17", "b": "Bus31", "cap": 9900.0}, {"a": "Bus29", "b": "Bus31", "cap": 9900.0}, {"a": "Bus23", "b": "Bus32", "cap": 9900.0}, {"a": "Bus31", "b": "Bus32", "cap": 9900.0}, {"a": "Bus27", "b": "Bus32", "cap": 9900.0}, {"a": "Bus15", "b": "Bus33", "cap": 9900.0}, {"a": "Bus19", "b": "Bus34", "cap": 9900.0}, {"a": "Bus35", "b": "Bus36", "cap": 9900.0}, {"a": "Bus35", "b": "Bus37", "cap": 9900.0}, {"a": "Bus33", "b": "Bus37", "cap": 9900.0}, {"a": "Bus34", "b": "Bus36", "cap": 9900.0}, {"a": "Bus34", "b": "Bus37", "cap": 9900.0}, {"a": "Bus37", "b": "Bus39", "cap": 9900.0}, {"a": "Bus37", "b": "Bus40", "cap": 9900.0}, {"a": "Bus30", "b": "Bus38", "cap": 9900.0}, {"a": "Bus39", "b": "Bus40", "cap": 9900.0}, {"a": "Bus40", "b": "Bus41", "cap": 9900.0}, {"a": "Bus40", "b": "Bus42", "cap": 9900.0}, {"a": "Bus41", "b": "Bus42", "cap": 9900.0}, {"a": "Bus43", "b": "Bus44", "cap": 9900.0}, {"a": "Bus34", "b": "Bus43", "cap": 9900.0}, {"a": "Bus44", "b": "Bus45", "cap": 9900.0}, {"a": "Bus45", "b": "Bus46", "cap": 9900.0}, {"a": "Bus46", "b": "Bus47", "cap": 9900.0}, {"a": "Bus46", "b": "Bus48", "cap": 9900.0}, {"a": "Bus47", "b": "Bus49", "cap": 9900.0}, {"a": "Bus42", "b": "Bus49", "cap": 9900.0}, {"a": "Bus42", "b": "Bus49", "cap": 9900.0}, {"a": "Bus45", "b": "Bus49", "cap": 9900.0}, {"a": "Bus48", "b": "Bus49", "cap": 9900.0}, {"a": "Bus49", "b": "Bus50", "cap": 9900.0}, {"a": "Bus49", "b": "Bus51", "cap": 9900.0}, {"a": "Bus51", "b": "Bus52", "cap": 9900.0}, {"a": "Bus52", "b": "Bus53", "cap": 9900.0}, {"a": "Bus53", "b": "Bus54", "cap": 9900.0}, {"a": "Bus49", "b": "Bus54", "cap": 9900.0}, {"a": "Bus49", "b": "Bus54", "cap": 9900.0}, {"a": "Bus54", "b": "Bus55", "cap": 9900.0}, {"a": "Bus54", "b": "Bus56", "cap": 9900.0}, {"a": "Bus55", "b": "Bus56", "cap": 9900.0}, {"a": "Bus56", "b": "Bus57", "cap": 9900.0}, {"a": "Bus50", "b": "Bus57", "cap": 9900.0}, {"a": "Bus56", "b": "Bus58", "cap": 9900.0}, {"a": "Bus51", "b": "Bus58", "cap": 9900.0}, {"a": "Bus54", "b": "Bus59", "cap": 9900.0}, {"a": "Bus56", "b": "Bus59", "cap": 9900.0}, {"a": "Bus56", "b": "Bus59", "cap": 9900.0}, {"a": "Bus55", "b": "Bus59", "cap": 9900.0}, {"a": "Bus59", "b": "Bus60", "cap": 9900.0}, {"a": "Bus59", "b": "Bus61", "cap": 9900.0}, {"a": "Bus60", "b": "Bus61", "cap": 9900.0}, {"a": "Bus60", "b": "Bus62", "cap": 9900.0}, {"a": "Bus61", "b": "Bus62", "cap": 9900.0}, {"a": "Bus63", "b": "Bus64", "cap": 9900.0}, {"a": "Bus38", "b": "Bus65", "cap": 9900.0}, {"a": "Bus64", "b": "Bus65", "cap": 9900.0}, {"a": "Bus49", "b": "Bus66", "cap": 9900.0}, {"a": "Bus49", "b": "Bus66", "cap": 9900.0}, {"a": "Bus62", "b": "Bus66", "cap": 9900.0}, {"a": "Bus62", "b": "Bus67", "cap": 9900.0}, {"a": "Bus66", "b": "Bus67", "cap": 9900.0}, {"a": "Bus47", "b": "Bus69", "cap": 9900.0}, {"a": "Bus49", "b": "Bus69", "cap": 9900.0}, {"a": "Bus69", "b": "Bus70", "cap": 9900.0}, {"a": "Bus24", "b": "Bus70", "cap": 9900.0}, {"a": "Bus70", "b": "Bus71", "cap": 9900.0}, {"a": "Bus24", "b": "Bus72", "cap": 9900.0}, {"a": "Bus71", "b": "Bus72", "cap": 9900.0}, {"a": "Bus71", "b": "Bus73", "cap": 9900.0}, {"a": "Bus70", "b": "Bus74", "cap": 9900.0}, {"a": "Bus70", "b": "Bus75", "cap": 9900.0}, {"a": "Bus69", "b": "Bus75", "cap": 9900.0}, {"a": "Bus74", "b": "Bus75", "cap": 9900.0}, {"a": "Bus76", "b": "Bus77", "cap": 9900.0}, {"a": "Bus69", "b": "Bus77", "cap": 9900.0}, {"a": "Bus75", "b": "Bus77", "cap": 9900.0}, {"a": "Bus77", "b": "Bus78", "cap": 9900.0}, {"a": "Bus78", "b": "Bus79", "cap": 9900.0}, {"a": "Bus77", "b": "Bus80", "cap": 9900.0}, {"a": "Bus77", "b": "Bus80", "cap": 9900.0}, {"a": "Bus79", "b": "Bus80", "cap": 9900.0}, {"a": "Bus77", "b": "Bus82", "cap": 9900.0}, {"a": "Bus82", "b": "Bus83", "cap": 9900.0}, {"a": "Bus83", "b": "Bus84", "cap": 9900.0}, {"a": "Bus83", "b": "Bus85", "cap": 9900.0}, {"a": "Bus84", "b": "Bus85", "cap": 9900.0}, {"a": "Bus85", "b": "Bus86", "cap": 9900.0}, {"a": "Bus85", "b": "Bus88", "cap": 9900.0}, {"a": "Bus85", "b": "Bus89", "cap": 9900.0}, {"a": "Bus88", "b": "Bus89", "cap": 9900.0}, {"a": "Bus89", "b": "Bus90", "cap": 9900.0}, {"a": "Bus89", "b": "Bus90", "cap": 9900.0}, {"a": "Bus90", "b": "Bus91", "cap": 9900.0}, {"a": "Bus89", "b": "Bus92", "cap": 9900.0}, {"a": "Bus89", "b": "Bus92", "cap": 9900.0}, {"a": "Bus91", "b": "Bus92", "cap": 9900.0}, {"a": "Bus92", "b": "Bus93", "cap": 9900.0}, {"a": "Bus92", "b": "Bus94", "cap": 9900.0}, {"a": "Bus93", "b": "Bus94", "cap": 9900.0}, {"a": "Bus94", "b": "Bus95", "cap": 9900.0}, {"a": "Bus80", "b": "Bus96", "cap": 9900.0}, {"a": "Bus82", "b": "Bus96", "cap": 9900.0}, {"a": "Bus94", "b": "Bus96", "cap": 9900.0}, {"a": "Bus80", "b": "Bus97", "cap": 9900.0}, {"a": "Bus80", "b": "Bus98", "cap": 9900.0}, {"a": "Bus80", "b": "Bus99", "cap": 9900.0}, {"a": "Bus92", "b": "Bus100", "cap": 9900.0}, {"a": "Bus94", "b": "Bus100", "cap": 9900.0}, {"a": "Bus95", "b": "Bus96", "cap": 9900.0}, {"a": "Bus96", "b": "Bus97", "cap": 9900.0}, {"a": "Bus98", "b": "Bus100", "cap": 9900.0}, {"a": "Bus99", "b": "Bus100", "cap": 9900.0}, {"a": "Bus100", "b": "Bus101", "cap": 9900.0}, {"a": "Bus92", "b": "Bus102", "cap": 9900.0}, {"a": "Bus101", "b": "Bus102", "cap": 9900.0}, {"a": "Bus100", "b": "Bus103", "cap": 9900.0}, {"a": "Bus100", "b": "Bus104", "cap": 9900.0}, {"a": "Bus103", "b": "Bus104", "cap": 9900.0}, {"a": "Bus103", "b": "Bus105", "cap": 9900.0}, {"a": "Bus100", "b": "Bus106", "cap": 9900.0}, {"a": "Bus104", "b": "Bus105", "cap": 9900.0}, {"a": "Bus105", "b": "Bus106", "cap": 9900.0}, {"a": "Bus105", "b": "Bus107", "cap": 9900.0}, {"a": "Bus105", "b": "Bus108", "cap": 9900.0}, {"a": "Bus106", "b": "Bus107", "cap": 9900.0}, {"a": "Bus108", "b": "Bus109", "cap": 9900.0}, {"a": "Bus103", "b": "Bus110", "cap": 9900.0}, {"a": "Bus109", "b": "Bus110", "cap": 9900.0}, {"a": "Bus110", "b": "Bus111", "cap": 9900.0}, {"a": "Bus110", "b": "Bus112", "cap": 9900.0}, {"a": "Bus17", "b": "Bus113", "cap": 9900.0}, {"a": "Bus32", "b": "Bus113", "cap": 9900.0}, {"a": "Bus32", "b": "Bus114", "cap": 9900.0}, {"a": "Bus27", "b": "Bus115", "cap": 9900.0}, {"a": "Bus114", "b": "Bus115", "cap": 9900.0}, {"a": "Bus12", "b": "Bus117", "cap": 9900.0}, {"a": "Bus75", "b": "Bus118", "cap": 9900.0}, {"a": "Bus76", "b": "Bus118", "cap": 9900.0}, {"a": "Bus8", "b": "Bus5", "cap": 9900.0}, {"a": "Bus26", "b": "Bus25", "cap": 9900.0}, {"a": "Bus30", "b": "Bus17", "cap": 9900.0}, {"a": "Bus38", "b": "Bus37", "cap": 9900.0}, {"a": "Bus63", "b": "Bus59", "cap": 9900.0}, {"a": "Bus64", "b": "Bus61", "cap": 9900.0}, {"a": "Bus65", "b": "Bus66", "cap": 9900.0}, {"a": "Bus65", "b": "Bus68", "cap": 9900.0}, {"a": "Bus68", "b": "Bus69", "cap": 9900.0}, {"a": "Bus81", "b": "Bus68", "cap": 9900.0}, {"a": "Bus81", "b": "Bus80", "cap": 9900.0}, {"a": "Bus87", "b": "Bus86", "cap": 9900.0}, {"a": "Bus116", "b": "Bus68", "cap": 9900.0}]};
 const METHODS = [{"id": "milp", "name": "Exact MILP (HiGHS)", "score": "3,073.3 MW", "extra": "certified floor 3,067.1 \u00b7 gap 0.20%", "buses": [5, 22, 23, 25, 27, 55, 114, 115], "color": "#2563EB", "note": "Needs an OR expert to build. Provides the proof."}, {"id": "sv2", "name": "Stride v2 (D-Wave hybrid)", "score": "3,073.3 MW", "extra": "3 runs \u00b7 zero spread \u00b7 no reformulation", "buses": [5, 22, 23, 25, 27, 32, 55, 115], "color": "#7C3AED", "note": "Takes the problem as written. Matches the exact solver's quality."}, {"id": "sv1", "name": "Stride v1", "score": "3,074.0 MW", "extra": "best of 4 runs (3,074.0 to 3,075.8)", "buses": [6, 22, 23, 25, 27, 55, 114, 115], "color": "#A78BFA", "note": "Original construction, before vendor-guided vectorisation."}, {"id": "greedy", "name": "Greedy + local search", "score": "3,079.6 MW", "extra": "deterministic \u00b7 free \u00b7 seconds", "buses": [2, 6, 22, 23, 25, 27, 32, 55], "color": "#059669", "note": "The strong cheap baseline. Wins easy problems outright."}, {"id": "sa", "name": "Simulated annealing", "score": "3,083.6 MW", "extra": "deterministic seeds", "buses": [6, 20, 22, 23, 25, 27, 59, 114], "color": "#D97706", "note": "Generic metaheuristic."}];
-const RAW = [["Exact solver (with expert)", 3073.3, "#2563EB"], ["Quantum hybrid", 3073.3, "#7C3AED"], ["Quantum hybrid, first version", 3074.0, "#A78BFA"], ["Smart shortcut method", 3079.6, "#059669"], ["General-purpose search", 3083.6, "#D97706"]];
+const RAW = [["Exact solver (MILP)", 3073.3, "#2563EB"], ["Quantum hybrid (D-Wave Stride)", 3073.3, "#7C3AED"], ["Quantum hybrid, first build", 3074.0, "#A78BFA"], ["Greedy (classical algorithm)", 3079.6, "#059669"], ["Simulated annealing", 3083.6, "#D97706"]];
 const EXPOSURE = 12811.3;
 document.querySelectorAll('.rail a').forEach(a=>a.onclick=()=>{
   document.querySelectorAll('.rail a').forEach(x=>x.classList.remove('on'));
@@ -309,25 +312,33 @@ cap.innerHTML='Out of 12,811 MW at risk on the worst day, the best plans keep 9,
  +'The top two are separated by nothing at all.';
 wrap.appendChild(cap);
 // value vs cost, log scale (USD)
-const VB=[["What you pay to get the better plan","£2,100 (about $2,700)",2700,"#7C3AED","COST"],
- ["Value each time a severe event hits","$126k – $252k",252000,"#B45309","PER EVENT"],
- ["Value over the 20-year battery life","$1.3M – $5M",5000000,"#B45309","LIFETIME"]];
+// per method: [name, setup+compute cost GBP, MW better than the weakest, colour]
+const VB=[["Exact solver (MILP)",20000,10.3,"#2563EB"],
+ ["Quantum hybrid (Stride)",2100,10.3,"#7C3AED"],
+ ["Greedy (classical)",1500,4.0,"#059669"],
+ ["Simulated annealing",1500,0,"#D97706"]];
+const PERMW=[206000,794000];  // 20-yr value per MW, from $1.3-5M over 6.3 MW
 const vw=document.getElementById('vbars');
 const L10=v=>Math.log10(v), vmin=L10(1000), vmax=L10(10000000);
-VB.forEach(([lab,txt,v,c,tag])=>{
- const pct=Math.max(3,((L10(v)-vmin)/(vmax-vmin))*100);
+const px=v=>Math.max(2.5,((L10(v)-vmin)/(vmax-vmin))*100);
+const money=v=>v>=1e6?'$'+(v/1e6).toFixed(1)+'M':'$'+Math.round(v/1000)+'k';
+VB.forEach(([nm,cost,mw,c])=>{
+ const vlo=mw*PERMW[0], vhi=mw*PERMW[1];
  const d=document.createElement('div');d.className='vrow';
- d.innerHTML='<div class="vlab"><span>'+lab+'</span><b>'+txt+'</b></div>'
-  +'<div class="vtrack"><div class="vfill" style="width:'+pct+'%;background:'+c+'">'+tag+'</div></div>';
+ d.innerHTML='<div class="vlab"><span><b style="font-size:12.5px;color:'+c+'">'+nm+'</b></span>'
+  +'<span style="font-size:11px">'+(mw?('+'+mw.toFixed(1)+' MW kept on'):'baseline')+'</span></div>'
+  +'<div class="vtrack mini"><div class="vfill" style="width:'+px(cost)+'%;background:'+c+';opacity:.55">COST £'+(cost/1000)+'k</div></div>'
+  +'<div class="vtrack mini"><div class="vfill" style="width:'+(mw?px(vhi):0)+'%;background:#B45309">'
+  +(mw?('WORTH '+money(vlo)+' – '+money(vhi)):'')+'</div></div>';
  vw.appendChild(d);});
 const vs=document.createElement('div');vs.className='vscale';
-vs.innerHTML='<span>£1k</span><span>£10k</span><span>£100k</span><span>£1M</span><span>£10M</span>';
+vs.innerHTML='<span>£1k</span><span>£10k</span><span>£100k</span><span>$1M</span><span>$10M</span>';
 vw.appendChild(vs);
 
 // maps
 const LEFT=METHODS.find(m=>m.id==='sv2');
-const PRETTY={milp:'Exact solver (with expert)',sv1:'Quantum hybrid, first version',
- greedy:'Smart shortcut method',sa:'General-purpose search',sv2:'Quantum hybrid'};
+const PRETTY={milp:'Exact solver (MILP)',sv1:'Quantum hybrid, first build',
+ greedy:'Greedy (classical algorithm)',sa:'Simulated annealing',sv2:'Quantum hybrid (D-Wave Stride)'};
 function mkmap(el){const m=L.map(el,{scrollWheelZoom:false,zoomControl:false}).setView([40.1,-82.7],6);
  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© OSM © CARTO'}).addTo(m);
  const at={};GRID.buses.forEach(b=>at[b.id]=[b.lat,b.lon]);
