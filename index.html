@@ -38,6 +38,15 @@ h1{font-size:30px;margin:8px 0 4px}h2{font-size:21px;margin:38px 0 6px}
 .btrack{background:var(--bg);border-radius:5px;height:22px;position:relative}
 .bfill{height:100%;border-radius:5px}
 .floorline{position:absolute;top:-6px;bottom:-6px;width:2px;background:#DC2626}
+.exp{display:grid;grid-template-columns:1fr 1fr;gap:0}
+.ecol{padding:16px 18px;border-right:1px solid var(--line)}.ecol:last-child{border-right:0}
+.etag{color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:4px 9px;border-radius:4px;display:inline-block}
+.ecol b{display:block;font-family:var(--mono);font-size:26px;margin:10px 0 2px}
+.ecert{font-size:12px;color:var(--mut)}
+.ecol ul{margin:12px 0 10px 18px;padding:0;font-size:13px;color:var(--dim)}
+.ecol li{margin:5px 0}
+.efoot{font-size:12.5px;font-weight:600;color:var(--ink);border-top:1px solid var(--line);padding-top:9px}
+@media(max-width:700px){.exp{grid-template-columns:1fr}.ecol{border-right:0;border-bottom:1px solid var(--line)}}
 .money{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px}
 .mcard{border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:9px;padding:12px 16px}
 .mcard b{font-family:var(--mono);font-size:21px;color:var(--gold)}
@@ -65,7 +74,12 @@ mathematically certified optimum. Explore the plans each method chose.</p>
 <div class="chip"><b>0 spread</b><span>3 hybrid runs, identical result</span></div>
 </div>
 
-<h2>Side by side: Stride against the rest</h2>
+<h2>The result, at equal time</h2>
+<p class="lead">Every method got the same 120 seconds on the same problem, scored by the same code. The red line is a mathematical proof: no plan, by any method ever, can beat 3,067.1 MW.</p>
+<div class="panel"><div class="phead">Worst-scenario residual load-not-served · 120 s per method · lower is better</div>
+<div class="bars" id="bars"></div></div>
+
+<h2>Where the plans differ, and where they agree</h2>
 <p class="lead">Left is the D-Wave hybrid's plan, taken from the problem as written with no expert
 reformulation. Right is whichever method you pick. Real IEEE 118-bus topology, illustrative Ohio
 geography; both plans are actual harness results on the NSRDB design event.</p>
@@ -83,17 +97,47 @@ geography; both plans are actual harness results on the NSRDB design event.</p>
     </div>
   </div>
   <div class="diff" id="diff"></div>
+  <div style="padding:8px 16px;border-top:1px solid var(--line);font-size:12px;color:var(--mut)">
+    <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:#0E9F6E;margin-right:5px"></span>
+    solid green: buses both methods chose (the stable core) &nbsp;·&nbsp;
+    <span style="display:inline-block;width:10px;height:10px;border-radius:50%;border:2px dashed #7C3AED;margin-right:5px"></span>
+    dashed: that method's own picks
+  </div>
 </div>
-
-<h2>The race, at equal time</h2>
-<div class="panel"><div class="phead">Worst-scenario residual load-not-served · 120 s per method · lower is better</div>
-<div class="bars" id="bars"></div></div>
 
 <h2>What the gap is worth</h2>
 <div class="panel"><div class="phead">The 6.3 MW between the certified plan and the best heuristic</div>
 <div class="money">
 <div class="mcard"><b>$126k – $252k</b><div>per avoided worst-day event<br>6.3 MW × 4 h × $5–10k per MWh</div></div>
 <div class="mcard"><b>$1.3M – $5M</b><div>over a 20-year asset life<br>one event per 1–2 years · solver cost: single-digit dollars</div></div>
+</div></div>
+
+<h2>The part the numbers hide</h2>
+<p class="lead">Both top methods scored 3,073.3 MW. They are not equally available.</p>
+<div class="panel"><div class="phead">Same score, different price of entry</div>
+<div class="exp">
+  <div class="ecol">
+    <div class="etag" style="background:#2563EB">WITH AN OPERATIONS RESEARCH SPECIALIST</div>
+    <b>3,073.3 MW</b><span class="ecert">+ a certificate: proof nothing beats 3,067.1</span>
+    <ul>
+      <li>Someone must spot that the nonlinear objective linearises exactly</li>
+      <li>Then build and validate the MILP</li>
+      <li>Days of the rarest skill in the stack</li>
+      <li>Rebuild it whenever the physics changes</li>
+    </ul>
+    <div class="efoot">Absent that person, this column does not exist.</div>
+  </div>
+  <div class="ecol">
+    <div class="etag" style="background:#7C3AED">WITHOUT ONE</div>
+    <b>3,073.3 MW</b><span class="ecert">no certificate, identical quality</span>
+    <ul>
+      <li>The objective goes in as written: caps, worst-case nesting, hard constraints</li>
+      <li>No reformulation, no linearisation</li>
+      <li>Minutes of setup, three runs, zero spread</li>
+      <li>Physics changes? Edit the objective and rerun</li>
+    </ul>
+    <div class="efoot">This is the column most planning teams actually live in.</div>
+  </div>
 </div></div>
 
 <h2>The boundary map</h2>
@@ -129,17 +173,21 @@ function mkmap(el){const m=L.map(el,{scrollWheelZoom:false,zoomControl:false}).s
   .addTo(m).bindTooltip('Bus23 · 400 MW AI data centre');
  return {m,at,layer:[]};}
 const L1=mkmap('mapL'), R1=mkmap('mapR');
-function plot(o,meth){o.layer.forEach(x=>o.m.removeLayer(x));o.layer=[];
+function plot(o,meth,shared){o.layer.forEach(x=>o.m.removeLayer(x));o.layer=[];
  meth.buses.forEach(n=>{const p=o.at['Bus'+n];if(!p)return;
-  o.layer.push(L.circleMarker(p,{radius:11,color:meth.color,weight:3,
-   fillColor:meth.color,fillOpacity:.3}).addTo(o.m).bindTooltip(meth.name+' · Bus'+n));});}
+  const core=shared&&shared.includes(n);
+  o.layer.push(L.circleMarker(p,{radius:core?12:11,
+   color:core?'#0E9F6E':meth.color,weight:3,
+   fillColor:core?'#0E9F6E':meth.color,fillOpacity:core?.38:.22,
+   dashArray:core?null:'4,3'})
+   .addTo(o.m).bindTooltip((core?'SHARED CORE · ':'')+meth.name+' · Bus'+n));});}
 function head(el,m,tag){document.getElementById(el).innerHTML =
  '<b style="color:'+m.color+'">'+m.score+'</b><span>'+tag+' · '+m.name+' · '+m.extra+'</span>';}
 function showR(id){const m=METHODS.find(x=>x.id===id);
  document.querySelectorAll('.pick button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
- plot(R1,m);head('hR',m,'COMPARE');
- const dl=parseFloat(LEFT.score.replace(/[^0-9.]/g,'')), dr=parseFloat(m.score.replace(/[^0-9.]/g,''));
  const shared=LEFT.buses.filter(b=>m.buses.includes(b));
+ plot(L1,LEFT,shared);plot(R1,m,shared);head('hR',m,'COMPARE');
+ const dl=parseFloat(LEFT.score.replace(/[^0-9.]/g,'')), dr=parseFloat(m.score.replace(/[^0-9.]/g,''));
  const gap=(dr-dl).toFixed(1);
  let verdict;
  if(Math.abs(dr-dl)<0.05) verdict='<b>Dead heat.</b> Identical worst-case score, reached two different ways: '+
@@ -151,7 +199,7 @@ function showR(id){const m=METHODS.find(x=>x.id===id);
 const pick=document.getElementById('pick');
 METHODS.filter(m=>m.id!=='sv2').forEach(m=>{const b=document.createElement('button');
  b.dataset.id=m.id;b.textContent='vs '+m.name;b.onclick=()=>showR(m.id);pick.appendChild(b);});
-plot(L1,LEFT);head('hL',LEFT,'STRIDE (D-WAVE HYBRID)');
+head('hL',LEFT,'STRIDE (D-WAVE HYBRID)');
 showR('milp');
 // bars
 const BARS=[["Exact MILP", 3073.3, "#2563EB"], ["Stride v2", 3073.3, "#7C3AED"], ["Stride v1", 3074.0, "#A78BFA"], ["Greedy+local", 3079.6, "#059669"], ["Sim. annealing", 3083.6, "#D97706"]];const lo=3060,hi=3090,floor=3067.1;
