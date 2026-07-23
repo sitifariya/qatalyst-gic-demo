@@ -331,11 +331,11 @@ VB.forEach(([nm,tech,cost,mw,c])=>{
   +'<div class="vtrack"><div class="vfill" style="width:'+pct+'%;background:'+c+';opacity:'+(win?1:.72)+'">'
   +(mw?money(val):'')+'</div>'+(win?'<span class="tick">★</span>':'')+'</div>';
  vw.appendChild(d);});
-const cap=document.createElement('div');
-cap.style.cssText='font-size:10.5px;color:#7C8AA0;margin-top:5px';
-cap.innerHTML='Bar length: what each method\'s plan is worth over 20 years, compared with the weakest method. '
+const vcap=document.createElement('div');
+vcap.style.cssText='font-size:10.5px;color:#7C8AA0;margin-top:5px';
+vcap.innerHTML='Bar length: what each method\'s plan is worth over 20 years, compared with the weakest method. '
  +'Upper-bound assumptions from the value tab.';
-vw.appendChild(cap);
+vw.appendChild(vcap);
 
 // maps
 const LEFT=METHODS.find(m=>m.id==='sv2');
