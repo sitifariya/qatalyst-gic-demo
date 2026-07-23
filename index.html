@@ -79,6 +79,10 @@ font-weight:800;letter-spacing:.04em;color:var(--accent)}
 .selwrap{position:relative;display:inline-flex;align-items:center}
 .selwrap .caret{position:absolute;right:10px;pointer-events:none;color:#fff;font-size:12px}
 .hint{font-size:11px;color:var(--mut);font-style:italic}
+.solobtn{margin-left:auto;border:1.5px solid var(--accent);background:#fff;color:var(--accent);
+border-radius:8px;padding:6px 13px;font:700 12.5px "Segoe UI";cursor:pointer}
+.solobtn:hover{background:var(--accent);color:#fff}
+.solobtn.on{background:var(--accent);color:#fff}
 .mname{font-size:15px;font-weight:700}
 .mname span{font-weight:400;font-size:11px;color:var(--mut)}
 .mscore{text-align:right;font-family:var(--mono);font-size:15px;font-weight:700}
@@ -249,6 +253,7 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
       <div class="mtitle big">D-WAVE STRIDE COMPARED WITH</div>
       <div class="selwrap"><select id="pick" class="msel"></select><span class="caret">▾</span></div>
       <span class="hint">click to change</span>
+      <button id="soloBtn" class="solobtn">Show D-Wave Stride only</button>
       <div class="legend2">
         <span><i class="lg" style="background:#059669"></i>both chose this site</span>
         <span><i class="lg" style="background:#7C3AED"></i>only Stride</span>
@@ -404,7 +409,27 @@ function popup(n){
  L.popup({maxWidth:280}).setLatLng(AT[b.id]).setContent(h).openOn(M);}
 
 let planLayer=[];
+let soloMode=false;
+function drawSolo(){
+ soloMode=true;
+ document.getElementById('soloBtn').classList.add('on');
+ planLayer.forEach(x=>M.removeLayer(x));planLayer=[];
+ LEFT.buses.forEach(n=>{const p=AT['Bus'+n];if(!p)return;
+  planLayer.push(L.circleMarker(p,{radius:13,color:'#7C3AED',weight:4.5,
+   fillColor:'#7C3AED',fillOpacity:.26}).addTo(M)
+   .bindTooltip('D-Wave Stride put a battery here · Substation '+n)
+   .on('click',()=>popup(n)));});
+ const pL=(EXPOSURE-parseFloat(LEFT.score.replace(/[^0-9.]/g,''))).toLocaleString(undefined,{maximumFractionDigits:0});
+ document.getElementById('planSay').innerHTML=
+  '<b>The D-Wave Stride plan on its own.</b> Eight batteries, chosen straight from the problem as written, '
+  +'with no expert reformulation. Pick a method above to see how another approach compares.';
+ document.getElementById('diff').innerHTML=
+  '<b style="color:#7C3AED">D-Wave Stride: '+pL+' MW kept on</b> &nbsp;·&nbsp; '
+  +'matches the exact solver\'s score, reached without rewriting the problem';}
+
 function drawPlans(id){
+ soloMode=false;
+ document.getElementById('soloBtn').classList.remove('on');
  const m=METHODS.find(x=>x.id===id);
  planLayer.forEach(x=>M.removeLayer(x));planLayer=[];
  const shared=LEFT.buses.filter(b=>m.buses.includes(b));
@@ -435,6 +460,7 @@ const pick=document.getElementById('pick');
 METHODS.filter(m=>m.id!=='sv2').forEach(m=>{const o=document.createElement('option');
  o.value=m.id;o.textContent=(PRETTY[m.id]||m.name);pick.appendChild(o);});
 pick.addEventListener('change',()=>drawPlans(pick.value));
-drawPlans('milp');
+document.getElementById('soloBtn').addEventListener('click',drawSolo);
+drawSolo();
 window.L1={m:M};window.R1={m:M};
 </script></body></html>
