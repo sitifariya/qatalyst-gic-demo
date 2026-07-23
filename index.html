@@ -40,8 +40,8 @@ letter-spacing:.11em;text-transform:uppercase;padding:6px 12px;flex:none}
 border-radius:9px;padding:10px 15px}
 .chip b{display:block;font-family:var(--mono);font-size:20px}
 .chip span{font-size:11.5px;color:var(--mut)}
-.twin{display:grid;grid-template-rows:212px minmax(0,1fr);gap:10px;flex:1;min-height:0}
-.pair{display:grid;grid-template-columns:1.25fr 1fr;gap:11px;min-height:0}
+.twin{display:grid;grid-template-rows:minmax(0,0.85fr) minmax(240px,1fr);gap:10px;flex:1;min-height:0}
+.pair{display:grid;grid-template-columns:1fr 1.15fr;gap:10px;min-height:0}
 .pair .panel{min-height:0;overflow:hidden}
 @media(max-width:1100px){.pair{grid-template-columns:1fr}}
 .twin .panel{min-height:0}
@@ -86,21 +86,22 @@ border-radius:4px;display:inline-block}
 .ecert{font-size:12px;color:var(--mut)}
 .ecol ul{margin:13px 0 11px 18px;padding:0;font-size:13px;color:var(--dim)}.ecol li{margin:6px 0}
 .efoot{font-size:13px;font-weight:600;border-top:1px solid var(--line);padding-top:9px;margin-top:4px}
-.vchart{flex:1;display:grid;grid-template-columns:38px 1fr 40px;gap:6px;padding:12px 14px 2px;min-height:0}
+.vchart{flex:1;display:grid;grid-template-columns:40px 1fr 42px;gap:8px;padding:10px 16px 4px;min-height:0}
 .ylab{display:flex;flex-direction:column;justify-content:space-between;font-family:var(--mono);
-font-size:9px;color:var(--mut);padding:2px 0 17px}
+font-size:9.5px;color:var(--mut);padding:16px 0 34px}
 .ylab.right{text-align:right}
 .cols{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:10px;align-items:end;
 border-left:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);
 padding:0 6px}
-.col{display:flex;flex-direction:column;justify-content:flex-end;height:100%;gap:3px}
-.duo{display:flex;align-items:flex-end;justify-content:center;gap:5px;height:100%}
-.vb{width:34px;border-radius:3px 3px 0 0;position:relative;min-height:2px}
-.vb span{position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-family:var(--mono);
-font-size:9.5px;font-weight:700;white-space:nowrap}
-.cname{text-align:center;font-size:11px;font-weight:700;padding-top:4px;line-height:1.2}
-.cname i{display:block;font-weight:400;font-style:normal;font-size:9.5px;color:var(--mut)}
-.vkey{display:flex;gap:16px;justify-content:center;font-size:10.5px;color:var(--mut);padding:2px 0 0}
+.col{display:grid;grid-template-rows:1fr auto;height:100%;min-height:0}
+.duo{display:flex;align-items:flex-end;justify-content:center;gap:7px;min-height:0;padding-top:16px}
+.vb{width:42px;border-radius:4px 4px 0 0;position:relative;min-height:3px}
+.vb span{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-family:var(--mono);
+font-size:11px;font-weight:700;white-space:nowrap}
+.cname{text-align:center;font-size:12px;font-weight:700;padding-top:6px;line-height:1.25}
+.cname i{display:block;font-weight:400;font-style:normal;font-size:10px;color:var(--mut)}
+.vkey{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;font-size:10.5px;color:var(--mut);
+padding:5px 10px 9px;border-top:1px solid var(--line)}
 .vkey i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px}
 .vrow{display:grid;grid-template-columns:1fr;gap:3px}
 .vlab{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:var(--dim)}
@@ -110,7 +111,7 @@ font-size:9.5px;font-weight:700;white-space:nowrap}
 padding-right:9px;color:#fff;font-family:var(--mono);font-size:11.5px;font-weight:700;white-space:nowrap}
 .tick{position:absolute;right:-19px;top:1px;color:#B45309;font-size:14px}
 .panel.key{border:2px solid var(--gold);box-shadow:0 3px 16px -8px rgba(180,83,9,.6)}
-.phead.key{background:var(--gold)}
+.phead.key{background:var(--gold);font-size:10.5px}
 
 .ledger{padding:6px 14px 4px;flex:1;display:flex;flex-direction:column;justify-content:center}
 .lrow{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;
@@ -171,17 +172,14 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
 
 <div class="view" id="v1">
   <h2>Who won, what it cost, what it's worth</h2>
-  <div class="say tight">Two methods tied for the best answer. One needed days of a rare specialist,
-  the other an ordinary engineer for an afternoon. Either way the better plan pays for itself hundreds
-  of times over.</div>
   <div class="twin">
-    <div class="panel"><div class="phead">1 · How good is the answer? · longer is better</div>
-      <div class="bars" id="bars"></div>
-    </div>
     <div class="pair">
+      <div class="panel"><div class="phead">1 · How good is the answer? · longer is better</div>
+        <div class="bars" id="bars"></div>
+      </div>
       <div class="panel"><div class="phead">2 · What it cost to get there</div>
         <div class="costs">
-          <div class="crow chead"><span>Method</span><span>Setting it up</span><span>People</span><span>Answer time</span></div>
+          <div class="crow chead"><span>Method</span><span>Setting it up</span><span>People</span><span>Time</span></div>
           <div class="crow"><span class="cn" style="border-color:#2563EB">Exact solver<br><i>MILP</i></span>
             <span class="bad">Days · a specialist rewrites the problem into another form</span>
             <span class="bad">£5k–£20k</span><span>120 s</span></div>
@@ -196,20 +194,18 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
             <span class="ok">£0.5k–£1.5k</span><span>120 s</span></div>
         </div>
         <div class="note">Illustrative UK contractor rates. All four still need someone technical: none is
-        usable by the planner who owns the decision. That gap is what our engine closes.</div>
+        usable by the planner who owns the decision.</div>
       </div>
-      <div class="panel key"><div class="phead key">★ Key finding · same value, a tenth of the cost</div>
-        <div class="vchart">
-          <div class="ylab left"><span>$8M</span><span>$6M</span><span>$4M</span><span>$2M</span><span>0</span></div>
-          <div class="cols" id="vbars"></div>
-          <div class="ylab right"><span>£20k</span><span>£15k</span><span>£10k</span><span>£5k</span><span>0</span></div>
-        </div>
-        <div class="vkey"><span><i style="background:#B45309"></i>value of the plan, 20 years (left axis)</span>
-        <span><i style="background:#64748B"></i>cost to set up (right axis)</span></div>
-        <div class="note"><b style="color:var(--ink)">Same value, a tenth of the cost.</b> The first two
-        gold bars are identical: both plans are worth the same. The grey cost bars are not: the exact solver
-        needs a specialist and about £20,000 of setup, the quantum hybrid needs about £2,100 and an afternoon
-        of an ordinary engineer. Two scales: value in millions on the left, setup cost in thousands on the right.</div>
+    </div>
+    <div class="panel key"><div class="phead key">★ KEY FINDING · THE TOP TWO PLANS ARE WORTH THE SAME · ONE COSTS A TENTH AS MUCH TO SET UP</div>
+      <div class="vchart">
+        <div class="ylab left"><span>$8M</span><span>$6M</span><span>$4M</span><span>$2M</span><span>0</span></div>
+        <div class="cols" id="vbars"></div>
+        <div class="ylab right"><span>£20k</span><span>£15k</span><span>£10k</span><span>£5k</span><span>0</span></div>
+      </div>
+      <div class="vkey"><span><i style="background:#B45309"></i>value of the plan over 20 years (left axis)</span>
+      <span><i style="background:#64748B"></i>cost to set up, people plus compute (right axis)</span>
+      <span style="color:var(--dim)">Value measured against the weakest method.</span></div>
     </div>
   </div>
 </div>
