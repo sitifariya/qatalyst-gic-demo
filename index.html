@@ -69,12 +69,18 @@ font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;font-weight:700}
 .cmp{display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:0}
 .half{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
 .half:last-child{border-right:0}
-.hhead{padding:8px 13px;border-bottom:1px solid var(--line);font-size:12.5px;flex:none}
+.hhead{padding:7px 13px;border-bottom:1px solid var(--line);font-size:12.5px;flex:none;min-height:56px}
+.hhead.pickhead{padding:6px 10px}
+.lg{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:-1px;margin-right:3px}
+.lg.dash{border:2px dashed #7C3AED}
+@keyframes pulseRing{0%,100%{stroke-opacity:.95;stroke-width:3}50%{stroke-opacity:.25;stroke-width:11}}
+.pulse{animation:pulseRing 2.4s ease-in-out infinite}
+.pulse.core{animation-duration:1.8s}
 .hhead b{font-size:15px;display:block}.hhead span{color:var(--mut);font-size:11.5px}
 .mapbox{flex:1;min-height:0}
-.pick{display:flex;gap:7px;padding:9px 13px;border-bottom:1px solid var(--line);flex:none;flex-wrap:wrap}
-.pick button{border:1.5px solid var(--line);background:#fff;border-radius:18px;padding:5px 13px;
-font:600 12.5px "Segoe UI";cursor:pointer;color:var(--dim)}
+.pick{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.pick button{border:1.5px solid var(--line);background:#fff;border-radius:16px;padding:3px 11px;
+font:600 11.5px "Segoe UI";cursor:pointer;color:var(--dim)}
 .pick button.on{border-color:var(--accent);color:var(--accent);background:rgba(124,58,237,.07)}
 .diff{padding:9px 14px;border-top:1px solid var(--line);background:#F7F9FC;font-size:12.5px;flex:none}
 .diff b{color:var(--accent)}
@@ -211,19 +217,29 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
 
 <div class="view" id="v2">
   <h2>The plans</h2>
-  <div class="say">Different methods pick different sites, but they agree on a core. Five of the eight
-  locations show up in almost every answer.</div>
-  <div class="panel grow"><div class="phead">Where each method put the batteries</div>
-    <div class="pick" id="pick"></div>
+  <div class="say tight">The quantum hybrid's plan is on the left, always. Pick any other method on the
+  right to compare. Pulsing circles are the eight battery sites; green means both methods chose it.
+  The two maps move together, so zoom or drag either one.</div>
+  <div class="panel grow">
     <div class="cmp">
-      <div class="half"><div class="hhead" id="hL"></div><div class="mapbox" id="mapL"></div></div>
-      <div class="half"><div class="hhead" id="hR"></div><div class="mapbox" id="mapR"></div></div>
+      <div class="half">
+        <div class="hhead fixed" id="hL"></div>
+        <div class="mapbox" id="mapL"></div>
+      </div>
+      <div class="half">
+        <div class="hhead pickhead">
+          <div class="pick" id="pick"></div>
+          <div id="hR"></div>
+        </div>
+        <div class="mapbox" id="mapR"></div>
+      </div>
     </div>
     <div class="diff" id="diff"></div>
-    <div class="note"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:#059669"></span>
-    green: both methods chose this site &nbsp;·&nbsp;
-    <span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:2px dashed #7C3AED"></span>
-    dashed: only this method chose it &nbsp;·&nbsp; Map layout is illustrative; the network and the results are real.</div>
+    <div class="note"><span class="lg" style="background:#059669"></span> both methods put a battery here
+    &nbsp;·&nbsp; <span class="lg dash"></span> only this method chose it
+    &nbsp;·&nbsp; grey dots are substations, bigger means more demand
+    &nbsp;·&nbsp; the purple star is the 400 MW AI data centre
+    &nbsp;·&nbsp; map layout is illustrative; the network and results are real</div>
   </div>
 </div>
 
@@ -321,7 +337,7 @@ VB.forEach(([nm,tech,cost,mw,c])=>{
 const LEFT=METHODS.find(m=>m.id==='sv2');
 const PRETTY={milp:'Exact solver (MILP)',sv1:'Quantum hybrid, first build',
  greedy:'Greedy (classical algorithm)',sa:'Simulated annealing',sv2:'Quantum hybrid (D-Wave Stride)'};
-function mkmap(el){const m=L.map(el,{scrollWheelZoom:false,zoomControl:false}).setView([40.1,-82.7],6);
+function mkmap(el,ctrl){const m=L.map(el,{scrollWheelZoom:true,zoomControl:!!ctrl}).setView([40.1,-82.7],6);
  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© OSM © CARTO'}).addTo(m);
  const at={};GRID.buses.forEach(b=>at[b.id]=[b.lat,b.lon]);
  GRID.lines.forEach(l=>{const a=at[l.a],b=at[l.b];
@@ -329,18 +345,25 @@ function mkmap(el){const m=L.map(el,{scrollWheelZoom:false,zoomControl:false}).s
  GRID.buses.forEach(b=>L.circleMarker([b.lat,b.lon],
   {radius:3+Math.min(6,b.load/14),color:'#fff',weight:1,fillColor:'#64748B',fillOpacity:.8})
   .addTo(m).bindTooltip('Substation '+b.id.replace('Bus','')+' · demand '+b.load.toFixed(0)+' MW'));
- L.circleMarker(at['Bus23'],{radius:9,color:'#2E1560',weight:2,fillColor:'#7C3AED',fillOpacity:.9})
+ L.marker(at['Bus23'],{icon:L.divIcon({className:'dcstar',html:'<div style="font-size:21px;color:#7C3AED;text-shadow:0 0 3px #fff">★</div>',iconSize:[21,21],iconAnchor:[10,10]})})
   .addTo(m).bindTooltip('The 400 MW AI data centre');
  return {m,at,layer:[]};}
-const L1=mkmap('mapL'),R1=mkmap('mapR');window.L1=L1;window.R1=R1;
+const L1=mkmap('mapL',true),R1=mkmap('mapR',false);window.L1=L1;window.R1=R1;
+// keep both maps looking at the same place
+let syncing=false;
+function sync(a,b){a.m.on('move zoom',()=>{if(syncing)return;syncing=true;
+ b.m.setView(a.m.getCenter(),a.m.getZoom(),{animate:false});syncing=false;});}
+sync(L1,R1);sync(R1,L1);
 function plot(o,meth,shared){o.layer.forEach(x=>o.m.removeLayer(x));o.layer=[];
  meth.buses.forEach(n=>{const p=o.at['Bus'+n];if(!p)return;const core=shared&&shared.includes(n);
-  o.layer.push(L.circleMarker(p,{radius:core?12:11,color:core?'#059669':meth.color,weight:3,
-   fillColor:core?'#059669':meth.color,fillOpacity:core?.38:.22,dashArray:core?null:'4,3'})
-   .addTo(o.m).bindTooltip((core?'Both methods chose this · ':'')+'Substation '+n));});}
+  o.layer.push(L.circleMarker(p,{radius:core?11:10,color:core?'#059669':meth.color,weight:3,
+   fillColor:core?'#059669':meth.color,fillOpacity:core?.4:.2,dashArray:core?null:'4,3',
+   className:'pulse'+(core?' core':'')})
+   .addTo(o.m).bindTooltip((core?'Both methods chose this site · ':'Only this method chose it · ')
+   +'Substation '+n,{permanent:false}));});}
 function head(el,m,tag){const p=(EXPOSURE-parseFloat(m.score.replace(/[^0-9.]/g,''))).toLocaleString(undefined,{maximumFractionDigits:0});
- document.getElementById(el).innerHTML='<b style="color:'+m.color+'">'+p+' MW kept on</b>'
- +'<span>'+tag+' — '+(PRETTY[m.id]||m.name)+'</span>';}
+ document.getElementById(el).innerHTML='<b style="color:'+m.color+';font-size:15px">'+p+' MW kept on</b>'
+ +'<span style="display:block;color:#7C8AA0;font-size:11.5px">'+tag+' — '+(PRETTY[m.id]||m.name)+'</span>';}
 function showR(id){const m=METHODS.find(x=>x.id===id);
  document.querySelectorAll('.pick button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
  const shared=LEFT.buses.filter(b=>m.buses.includes(b));
@@ -353,6 +376,6 @@ function showR(id){const m=METHODS.find(x=>x.id===id);
  document.getElementById('diff').innerHTML=v+' &nbsp;·&nbsp; Both chose substations <b>'+shared.join(', ')+'</b> ('+shared.length+' of 8).';}
 const pick=document.getElementById('pick');
 METHODS.filter(m=>m.id!=='sv2').forEach(m=>{const b=document.createElement('button');
- b.dataset.id=m.id;b.textContent='compare with '+(PRETTY[m.id]||m.name);b.onclick=()=>showR(m.id);pick.appendChild(b);});
-head('hL',LEFT,'the quantum hybrid');showR('milp');
+ b.dataset.id=m.id;b.textContent=(PRETTY[m.id]||m.name);b.onclick=()=>showR(m.id);pick.appendChild(b);});
+head('hL',LEFT,'always shown — the quantum hybrid');showR('milp');
 </script></body></html>
