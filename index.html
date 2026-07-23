@@ -91,6 +91,13 @@ font-weight:600;margin:2px 3px 0 0;color:#fff}
 .pop .none{color:#7C8AA0;font-size:12px}
 .hhead b{font-size:15px;display:block}.hhead span{color:var(--mut);font-size:11.5px}
 .mapbox{flex:1;min-height:0}
+.maphold{position:relative;flex:1;min-height:0;display:flex}
+.floatcard{position:absolute;z-index:900;left:14px;top:14px;max-width:335px;
+background:rgba(255,255,255,.96);border:1px solid var(--line);border-left:4px solid var(--accent);
+border-radius:0 9px 9px 0;padding:11px 14px;font-size:13px;line-height:1.5;
+box-shadow:0 6px 20px -10px rgba(20,30,50,.45)}
+.floatcard b{color:var(--ink)}
+.panel.tall{flex:1}
 .pick{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
 .pick button{border:1.5px solid var(--line);background:#fff;border-radius:16px;padding:3px 11px;
 font:600 11.5px "Segoe UI";cursor:pointer;color:var(--dim)}
@@ -229,9 +236,7 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
 </div>
 
 <div class="view" id="v2">
-  <h2>The plans</h2>
-  <div class="say tight" id="planSay"></div>
-  <div class="panel grow">
+  <div class="panel grow tall">
     <div class="hhead one">
       <div class="mtitle">D-WAVE STRIDE COMPARED WITH</div>
       <select id="pick" class="msel"></select>
@@ -242,7 +247,10 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
         <span><i class="lg" style="background:#DC2626;opacity:.55"></i>substation under stress</span>
       </div>
     </div>
-    <div class="mapbox" id="mapOne"></div>
+    <div class="maphold">
+      <div class="mapbox" id="mapOne"></div>
+      <div class="floatcard" id="planSay"></div>
+    </div>
     <div class="diff" id="diff"></div>
     <div class="note"><b style="color:var(--ink)">Click any substation for its detail.</b>
     Colour shows how loaded it is: red is heaviest, amber is stretched, grey is comfortable. Batteries cluster where the trouble is. The purple star is the 400 MW AI
