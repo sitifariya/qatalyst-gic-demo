@@ -23,31 +23,32 @@ font-size:13.5px;cursor:pointer;margin-bottom:3px}
 .rail .i{display:inline-block;width:20px;opacity:.9}
 .rail .grp{color:#5C6779;font-family:var(--mono);font-size:9.5px;letter-spacing:.14em;padding:12px 12px 5px}
 .rail .foot{color:#5C6779;font-size:10.5px;padding:14px 12px;line-height:1.5}
-.view{padding:16px 22px;overflow:hidden;display:none;height:100%}
+.view{padding:13px 20px;overflow:hidden;display:none;height:100%}
 .view.on{display:flex;flex-direction:column}
-h2{margin:0 0 4px;font-size:21px}
+h2{margin:0 0 3px;font-size:19px}
 .say{background:#fff;border-left:4px solid var(--accent);border-radius:0 8px 8px 0;
-padding:10px 15px;margin:0 0 12px;font-size:14.5px;font-weight:600;max-width:1000px}
+padding:9px 14px;margin:0 0 10px;font-size:13.5px;font-weight:600;max-width:1100px}
+.say.tight{padding:7px 13px;font-size:13px;margin-bottom:9px}
 .lead{color:var(--dim);font-size:13px;margin:0 0 12px;max-width:1000px}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:11px;overflow:hidden;
 display:flex;flex-direction:column;min-height:0}
 .panel.grow{flex:1}
-.phead{background:var(--accent);color:#fff;font-family:var(--mono);font-size:10.5px;
-letter-spacing:.12em;text-transform:uppercase;padding:7px 13px;flex:none}
+.phead{background:var(--accent);color:#fff;font-family:var(--mono);font-size:10px;
+letter-spacing:.11em;text-transform:uppercase;padding:6px 12px;flex:none}
 .chips{display:none}
 .chip{background:#fff;border:1px solid var(--line);border-top:3px solid var(--accent);
 border-radius:9px;padding:10px 15px}
 .chip b{display:block;font-family:var(--mono);font-size:20px}
 .chip span{font-size:11.5px;color:var(--mut)}
-.twin{display:grid;grid-template-rows:minmax(190px,1fr) minmax(0,1.15fr);gap:11px;flex:1;min-height:0}
+.twin{display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px;flex:1;min-height:0}
 .pair{display:grid;grid-template-columns:1.25fr 1fr;gap:11px;min-height:0}
 .pair .panel{min-height:0}
 @media(max-width:1100px){.pair{grid-template-columns:1fr}}
 .twin .panel{min-height:0}
-.bars{padding:12px 16px;overflow:auto}
+.bars{padding:10px 14px 12px}
 .costs{padding:4px 0 2px}
-.crow{display:grid;grid-template-columns:118px 1fr 92px 118px;gap:8px;padding:7px 13px;
-align-items:center;font-size:12.5px;border-bottom:1px solid var(--line)}
+.crow{display:grid;grid-template-columns:104px 1fr 78px 96px;gap:7px;padding:6px 12px;
+align-items:center;font-size:11.8px;line-height:1.35;border-bottom:1px solid var(--line)}
 .crow:last-child{border-bottom:0}
 .crow.hi{background:rgba(124,58,237,.07)}
 .chead{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;
@@ -55,11 +56,11 @@ color:var(--mut);border-bottom:1px solid var(--line)}
 .cn{font-weight:700;border-left:3px solid;padding-left:9px}
 .good{color:#059669;font-weight:600}.bad{color:#B45309}.ok{color:var(--dim)}
 @media(max-width:900px){.crow{grid-template-columns:1fr;gap:2px}}
-.brow{display:grid;grid-template-columns:180px 1fr 140px;align-items:center;gap:11px;margin:7px 0}
+.brow{display:grid;grid-template-columns:172px 1fr 132px;align-items:center;gap:10px;margin:5px 0}
 .brow .nm{font-size:13px;font-weight:600;text-align:right}
 .brow .v{font-family:var(--mono);font-size:12.5px}
 .brow .v b{font-size:14px}
-.btrack{background:var(--bg);border-radius:5px;height:22px;position:relative;overflow:hidden}
+.btrack{background:var(--bg);border-radius:4px;height:19px;position:relative;overflow:hidden}
 .bfill{height:100%;border-radius:5px;position:relative}
 .badge{position:absolute;right:7px;top:50%;transform:translateY(-50%);color:#fff;
 font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;font-weight:700}
@@ -84,6 +85,12 @@ border-radius:4px;display:inline-block}
 .ecert{font-size:12px;color:var(--mut)}
 .ecol ul{margin:13px 0 11px 18px;padding:0;font-size:13px;color:var(--dim)}.ecol li{margin:6px 0}
 .efoot{font-size:13px;font-weight:600;border-top:1px solid var(--line);padding-top:9px;margin-top:4px}
+.ledger{padding:6px 14px 4px;flex:1;display:flex;flex-direction:column;justify-content:center}
+.lrow{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;
+border-bottom:1px dashed var(--line);font-size:12.5px;color:var(--dim)}
+.lrow .amt{font-family:var(--mono);font-weight:700;color:var(--ink);font-size:13px}
+.lrow.tot{border-bottom:2px solid var(--ink);color:var(--ink);font-weight:700}
+.lrow.gain{color:var(--gold)}.lrow.gain .amt{color:var(--gold);font-size:15px}
 .money{display:grid;grid-template-rows:1fr 1fr;gap:11px;padding:13px}
 .mcard{border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:9px;padding:14px 18px}
 .mcard b{font-family:var(--mono);font-size:21px;color:var(--gold)}
@@ -95,7 +102,7 @@ td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:top}
 td:nth-child(2){font-weight:600}
 tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--accent)}
 .scroll{overflow:auto;min-height:0;flex:1}
-.note{font-size:11.5px;color:var(--mut);padding:9px 14px;border-top:1px solid var(--line);flex:none}
+.note{font-size:11px;color:var(--mut);padding:7px 13px;border-top:1px solid var(--line);flex:none}
 </style></head><body>
 <div class="top"><span class="q">◆</span><span class="wm">QATALYST</span>
 <span class="sub">GIC 2026 · US DEPARTMENT OF ENERGY CHALLENGE</span>
@@ -137,44 +144,44 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
 
 <div class="view" id="v1">
   <h2>Who won, what it cost, what it's worth</h2>
-  <div class="say">Two methods tied for the best answer. One needed days of a rare specialist; the other
-  needed an ordinary engineer for an afternoon. The better plan is worth millions either way.</div>
+  <div class="say tight">Two methods tied for the best answer. One needed days of a rare specialist,
+  the other an ordinary engineer for an afternoon. Either way the better plan pays for itself hundreds
+  of times over.</div>
   <div class="twin">
     <div class="panel"><div class="phead">1 · How good is the answer? · longer is better</div>
       <div class="bars" id="bars"></div>
-      <div class="note">Red line: the proven ceiling. No plan, by any method ever, can keep more than
-      9,744 MW flowing on this day.</div>
     </div>
     <div class="pair">
       <div class="panel"><div class="phead">2 · What it cost to get there</div>
         <div class="costs">
-          <div class="crow chead"><span>Method</span><span>Setting it up</span><span>Setup cost</span><span>Answer time</span></div>
+          <div class="crow chead"><span>Method</span><span>Setting it up</span><span>People</span><span>Answer time</span></div>
           <div class="crow"><span class="cn" style="border-color:#2563EB">Exact solver</span>
-            <span class="bad">Days · a specialist must rewrite the problem into another form</span>
-            <span class="bad">£5k – £20k</span><span>120 s</span></div>
+            <span class="bad">Days · a specialist rewrites the problem into another form</span>
+            <span class="bad">£5k–£20k</span><span>120 s</span></div>
           <div class="crow hi"><span class="cn" style="border-color:#7C3AED">Quantum hybrid</span>
             <span class="good">Hours · an engineer writes the problem down as it is</span>
-            <span class="good">£0.5k – £2k</span><span>120 s + cloud wait</span></div>
+            <span class="good">£0.5k–£2k</span><span>120 s + wait</span></div>
           <div class="crow"><span class="cn" style="border-color:#059669">Smart shortcut</span>
             <span class="ok">Hours · but the answer is 6 MW worse</span>
-            <span class="ok">£0.5k – £1.5k</span><span>20–30 s</span></div>
+            <span class="ok">£0.5k–£1.5k</span><span>20–30 s</span></div>
           <div class="crow"><span class="cn" style="border-color:#D97706">General search</span>
             <span class="ok">Hours · answer is 10 MW worse</span>
-            <span class="ok">£0.5k – £1.5k</span><span>120 s</span></div>
+            <span class="ok">£0.5k–£1.5k</span><span>120 s</span></div>
         </div>
-        <div class="note">Illustrative UK contractor rates. All four still need someone technical: none can be
-        used directly by the planner who owns the decision. That gap is what our engine closes.</div>
+        <div class="note">Illustrative UK contractor rates. All four still need someone technical: none is
+        usable by the planner who owns the decision. That gap is what our engine closes.</div>
       </div>
-      <div class="panel"><div class="phead">3 · What the better plan is worth</div>
-        <div class="money">
-          <div class="mcard"><b>$126k – $252k</b><div>each time a worst-day event happens<br>
-          6.3 MW more kept flowing × 4 hours × standard cost of unserved power</div></div>
-          <div class="mcard"><b>$1.3M – $5M</b><div>over the 20-year life of the batteries<br>
-          one severe event every one to two years · roughly 5,000 homes per event</div></div>
+      <div class="panel"><div class="phead">3 · The bottom line, quantum hybrid route</div>
+        <div class="ledger">
+          <div class="lrow"><span>People, one off</span><span class="amt">£500 – £2,000</span></div>
+          <div class="lrow"><span>Computer time, per run</span><span class="amt">about £4</span></div>
+          <div class="lrow tot"><span>Total to get the better plan</span><span class="amt">under £2,100</span></div>
+          <div class="lrow gain"><span>Value of demand kept flowing, per severe event</span><span class="amt">$126k – $252k</span></div>
+          <div class="lrow gain"><span>Over the 20-year life of the batteries</span><span class="amt">$1.3M – $5M</span></div>
         </div>
-        <div class="note"><b style="color:var(--ink)">Setup cost is trivial next to the value.</b> So the real
-        question is not "can we afford it", it is "do we have the person". Specialists who can rewrite a problem
-        are scarce, and every physics change sends you back to one.</div>
+        <div class="note"><b style="color:var(--ink)">Roughly a thousand times what it cost.</b> So the
+        constraint is never the money, it is whether the right person is available. Specialists who can
+        rewrite a problem are scarce; every physics change sends you back to one.</div>
       </div>
     </div>
   </div>
@@ -295,7 +302,7 @@ prot.forEach(([nm,v,c,res])=>{
    +'<div class="v"><b>'+v.toLocaleString(undefined,{maximumFractionDigits:0})+' MW</b> kept on</div>';
   wrap.appendChild(d);});
 const cap=document.createElement('div');
-cap.style.cssText='font-size:11.5px;color:#7C8AA0;margin-top:8px;padding-left:190px';
+cap.style.cssText='font-size:10.5px;color:#7C8AA0;margin-top:6px;padding-left:182px';
 cap.innerHTML='Out of 12,811 MW at risk on the worst day, the best plans keep 9,738 MW flowing. '
  +'The top two are separated by nothing at all.';
 wrap.appendChild(cap);
