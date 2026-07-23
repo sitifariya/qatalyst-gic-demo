@@ -87,6 +87,7 @@ border-radius:4px;display:inline-block}
 .ecol ul{margin:13px 0 11px 18px;padding:0;font-size:13px;color:var(--dim)}.ecol li{margin:6px 0}
 .efoot{font-size:13px;font-weight:600;border-top:1px solid var(--line);padding-top:9px;margin-top:4px}
 .vchart{flex:1;display:grid;grid-template-columns:40px 1fr 42px;gap:8px;padding:10px 16px 4px;min-height:0}
+.vchart.solo{grid-template-columns:52px 1fr}
 .ylab{display:flex;flex-direction:column;justify-content:space-between;font-family:var(--mono);
 font-size:9.5px;color:var(--mut);padding:16px 0 34px}
 .ylab.right{text-align:right}
@@ -96,8 +97,9 @@ padding:0 6px}
 .col{display:grid;grid-template-rows:1fr auto;height:100%;min-height:0}
 .duo{display:flex;align-items:flex-end;justify-content:center;gap:7px;min-height:0;padding-top:16px}
 .vb{width:42px;border-radius:4px 4px 0 0;position:relative;min-height:3px}
-.vb span{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-family:var(--mono);
-font-size:11px;font-weight:700;white-space:nowrap}
+.vb.wide{width:78px}
+.vb span{position:absolute;top:-19px;left:50%;transform:translateX(-50%);font-family:var(--mono);
+font-size:14px;font-weight:700;white-space:nowrap}
 .cname{text-align:center;font-size:12px;font-weight:700;padding-top:6px;line-height:1.25}
 .cname i{display:block;font-weight:400;font-style:normal;font-size:10px;color:var(--mut)}
 .vkey{display:flex;gap:18px;justify-content:center;flex-wrap:wrap;font-size:10.5px;color:var(--mut);
@@ -141,7 +143,6 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
   <a data-v="v0" class="on"><span class="i">▶</span> The question</a>
   <a data-v="v1"><span class="i">▤</span> The result</a>
   <a data-v="v2"><span class="i">◉</span> The plans</a>
-  <a data-v="v3"><span class="i">◈</span> The hidden cost</a>
   <div class="grp">THE FULL PICTURE</div>
   <a data-v="v5"><span class="i">▦</span> Where quantum wins</a>
   <a data-v="v6"><span class="i">ⓘ</span> How we tested</a>
@@ -197,15 +198,13 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
         usable by the planner who owns the decision.</div>
       </div>
     </div>
-    <div class="panel key"><div class="phead key">★ KEY FINDING · THE TOP TWO PLANS ARE WORTH THE SAME · ONE COSTS A TENTH AS MUCH TO SET UP</div>
-      <div class="vchart">
-        <div class="ylab left"><span>$8M</span><span>$6M</span><span>$4M</span><span>$2M</span><span>0</span></div>
+    <div class="panel key"><div class="phead key">★ KEY FINDING · VALUE RETURNED FOR EVERY £1 SPENT SETTING THE METHOD UP</div>
+      <div class="vchart solo">
+        <div class="ylab left"><span>3,000×</span><span>2,000×</span><span>1,000×</span><span>0</span></div>
         <div class="cols" id="vbars"></div>
-        <div class="ylab right"><span>£20k</span><span>£15k</span><span>£10k</span><span>£5k</span><span>0</span></div>
       </div>
-      <div class="vkey"><span><i style="background:#B45309"></i>value of the plan over 20 years (left axis)</span>
-      <span><i style="background:#64748B"></i>cost to set up, people plus compute (right axis)</span>
-      <span style="color:var(--dim)">Value measured against the weakest method.</span></div>
+      <div class="vkey"><span style="color:var(--ink)"><b>The quantum hybrid returns the most value per pound spent.</b></span>
+      <span>It matches the exact solver's plan, for a tenth of the setup.</span></div>
     </div>
   </div>
 </div>
@@ -226,33 +225,6 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
     <span style="display:inline-block;width:9px;height:9px;border-radius:50%;border:2px dashed #7C3AED"></span>
     dashed: only this method chose it &nbsp;·&nbsp; Map layout is illustrative; the network and the results are real.</div>
   </div>
-</div>
-
-<div class="view" id="v3">
-  <h2>The hidden cost</h2>
-  <div class="say">Both winners scored the same. Getting that score cost one team days of a rare specialist,
-  and the other team minutes.</div>
-  <div class="panel grow"><div class="phead">Same answer, very different price of entry</div>
-  <div class="exp">
-    <div class="ecol">
-      <div class="etag" style="background:#2563EB">THE EXACT METHOD (MILP), IF YOU HAVE A SPECIALIST</div>
-      <b class="big">9,738 MW</b><span class="ecert">and a mathematical proof that nothing beats it</span>
-      <ul><li>Someone has to notice the problem can be rewritten into a form this solver understands</li>
-      <li>Then build that rewrite correctly, and check it</li>
-      <li>That skill is the rarest in the field, and it takes days</li>
-      <li>Change the physics, and it must be rebuilt from scratch</li></ul>
-      <div class="efoot">No specialist on the team? This option disappears.</div>
-    </div>
-    <div class="ecol">
-      <div class="etag" style="background:#7C3AED">THE QUANTUM HYBRID (D-WAVE STRIDE), IF YOU DON'T</div>
-      <b class="big">9,738 MW</b><span class="ecert">same score, no proof, no rewrite</span>
-      <ul><li>You describe the problem the way it actually is, and hand it over</li>
-      <li>No rewriting, no mathematical translation</li>
-      <li>Minutes to set up. We ran it three times and got the identical answer every time</li>
-      <li>Physics changed? Edit the description and run again</li></ul>
-      <div class="efoot">This is the situation most planning teams are actually in.</div>
-    </div>
-  </div></div>
 </div>
 
 <div class="view" id="v5">
@@ -313,7 +285,7 @@ document.querySelectorAll('.rail a').forEach(a=>a.onclick=()=>{
 const prot = RAW.map(([nm,res,c])=>[nm, EXPOSURE-res, c, res]);
 const best = Math.max(...prot.map(p=>p[1]));
 const ceiling = EXPOSURE-3067.1;
-const lo = Math.min(...prot.map(p=>p[1])) - 12, hi = ceiling + 4;
+const lo = Math.min(...prot.map(p=>p[1])) - 3, hi = ceiling + 1.5;
 const wrap=document.getElementById('bars');
 prot.forEach(([nm,v,c,res])=>{
   const pct=(v-lo)/(hi-lo)*100, cp=(ceiling-lo)/(hi-lo)*100, win=Math.abs(v-best)<0.05;
@@ -324,28 +296,25 @@ prot.forEach(([nm,v,c,res])=>{
    +'<div class="ceil" style="left:'+cp+'%"></div></div>'
    +'<div class="v"><b>'+v.toLocaleString(undefined,{maximumFractionDigits:0})+' MW</b> kept on</div>';
   wrap.appendChild(d);});
-const cap=document.createElement('div');
-cap.style.cssText='font-size:10.5px;color:#7C8AA0;margin-top:6px;padding-left:182px';
-cap.innerHTML='Out of 12,811 MW at risk on the worst day, the best plans keep 9,738 MW flowing. '
- +'The top two are separated by nothing at all.';
-wrap.appendChild(cap);
+
 // value vs cost, log scale (USD)
-// per method: [name, tech, setup+compute cost GBP, MW better than weakest, colour]
+// per method: [name, tech, setup GBP, MW better than weakest, colour]
 const VB=[["Exact solver","MILP + specialist",20000,10.3,"#2563EB"],
  ["Quantum hybrid","D-Wave Stride",2100,10.3,"#7C3AED"],
  ["Greedy","classical",1500,4.0,"#059669"],
  ["Sim. annealing","classical",1500,0,"#D97706"]];
-const PERMW=794000, VMAX=8.2e6, CMAX=20000;
+const PERMW=794000, GBP=1.27, RMAX=3300;
 const vw=document.getElementById('vbars');
-const money=v=>v>=1e6?'$'+(v/1e6).toFixed(1)+'M':(v>0?'$'+Math.round(v/1e3)+'k':'0');
+const bestRatio=Math.max(...VB.map(([,,c,mw])=>mw*PERMW/(c*GBP)));
 VB.forEach(([nm,tech,cost,mw,c])=>{
- const val=mw*PERMW;
- const vh=Math.max(val>0?1.5:0,(val/VMAX)*100), ch=Math.max(1.5,(cost/CMAX)*100);
+ const val=mw*PERMW, ratio=val/(cost*GBP);
+ const h=Math.max(ratio>0?1.5:0,(ratio/RMAX)*100), win=Math.abs(ratio-bestRatio)<1;
+ const lab=ratio>0?Math.round(ratio/10)*10+'×':'0×';
  const d=document.createElement('div');d.className='col';
- d.innerHTML='<div class="duo">'
-  +'<div class="vb" style="height:'+vh+'%;background:#B45309"><span style="color:#B45309">'+money(val)+'</span></div>'
-  +'<div class="vb" style="height:'+ch+'%;background:#64748B"><span style="color:#475569">£'+(cost/1000)+'k</span></div>'
-  +'</div><div class="cname" style="color:'+c+'">'+nm+'<i>'+tech+'</i></div>';
+ d.innerHTML='<div class="duo"><div class="vb wide" style="height:'+h+'%;background:'+c
+  +';opacity:'+(win?1:.75)+'"><span style="color:'+c+'">'+lab+(win?' ★':'')+'</span></div></div>'
+  +'<div class="cname" style="color:'+c+'">'+nm+'<i>'+tech+'</i>'
+  +'<i style="font-size:9.5px">$'+(val/1e6).toFixed(1)+'M value · £'+(cost/1000)+'k setup</i></div>';
  vw.appendChild(d);});
 
 // maps
