@@ -86,16 +86,17 @@ border-radius:4px;display:inline-block}
 .ecert{font-size:12px;color:var(--mut)}
 .ecol ul{margin:13px 0 11px 18px;padding:0;font-size:13px;color:var(--dim)}.ecol li{margin:6px 0}
 .efoot{font-size:13px;font-weight:600;border-top:1px solid var(--line);padding-top:9px;margin-top:4px}
-.vbars{padding:9px 14px 4px;flex:1;display:flex;flex-direction:column;justify-content:center;gap:7px;overflow:auto}
+.vbars{padding:12px 15px 6px;flex:1;display:flex;flex-direction:column;justify-content:center;gap:9px;overflow:hidden}
 .vrow{display:grid;grid-template-columns:1fr;gap:3px}
-.vlab{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--dim)}
+.vlab{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:var(--dim)}
 .vlab b{font-family:var(--mono);font-size:15px;color:var(--ink)}
-.vtrack{background:var(--bg);border-radius:4px;height:15px;overflow:hidden;margin-top:2px}
-.vtrack.mini{height:14px}
-.vfill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;
-padding-right:6px;color:#fff;font-family:var(--mono);font-size:8.5px;letter-spacing:.04em;white-space:nowrap}
-.vscale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;
-color:var(--mut);border-top:1px solid var(--line);padding-top:4px;margin-top:2px}
+.vtrack{background:var(--bg);border-radius:5px;height:24px;overflow:visible;margin-top:3px;position:relative}
+.vfill{height:100%;border-radius:5px;display:flex;align-items:center;justify-content:flex-end;
+padding-right:9px;color:#fff;font-family:var(--mono);font-size:11.5px;font-weight:700;white-space:nowrap}
+.tick{position:absolute;right:-19px;top:1px;color:#B45309;font-size:14px}
+.panel.key{border:2px solid var(--gold);box-shadow:0 3px 16px -8px rgba(180,83,9,.6)}
+.phead.key{background:var(--gold)}
+
 .ledger{padding:6px 14px 4px;flex:1;display:flex;flex-direction:column;justify-content:center}
 .lrow{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;
 border-bottom:1px dashed var(--line);font-size:12.5px;color:var(--dim)}
@@ -182,12 +183,11 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
         <div class="note">Illustrative UK contractor rates. All four still need someone technical: none is
         usable by the planner who owns the decision. That gap is what our engine closes.</div>
       </div>
-      <div class="panel"><div class="phead">3 · All four methods: what you pay, what you get back</div>
+      <div class="panel key"><div class="phead key">★ Key finding · same value, a tenth of the cost</div>
         <div class="vbars" id="vbars"></div>
-        <div class="note"><b style="color:var(--ink)">Log scale: each step across is ten times bigger.</b>
-        Value is what that method's plan is worth over 20 years compared with the weakest method here.
-        Every route pays for itself hundreds of times over, so the constraint is never money, it is whether
-        the right person is available.</div>
+        <div class="note"><b style="color:var(--ink)">The two tallest bars are identical.</b>
+        The exact solver needs a specialist and about £20,000 of setup; the quantum hybrid reaches the same
+        plan for about £2,100 and an afternoon of an ordinary engineer.</div>
     </div>
   </div>
 </div>
@@ -312,28 +312,30 @@ cap.innerHTML='Out of 12,811 MW at risk on the worst day, the best plans keep 9,
  +'The top two are separated by nothing at all.';
 wrap.appendChild(cap);
 // value vs cost, log scale (USD)
-// per method: [name, setup+compute cost GBP, MW better than the weakest, colour]
-const VB=[["Exact solver (MILP)",20000,10.3,"#2563EB"],
- ["Quantum hybrid (Stride)",2100,10.3,"#7C3AED"],
- ["Greedy (classical)",1500,4.0,"#059669"],
- ["Simulated annealing",1500,0,"#D97706"]];
-const PERMW=[206000,794000];  // 20-yr value per MW, from $1.3-5M over 6.3 MW
+// per method: [name, tech, setup+compute cost GBP, MW better than weakest, colour]
+const VB=[["Exact solver","MILP + specialist",20000,10.3,"#2563EB"],
+ ["Quantum hybrid","D-Wave Stride",2100,10.3,"#7C3AED"],
+ ["Greedy","classical algorithm",1500,4.0,"#059669"],
+ ["Simulated annealing","classical search",1500,0,"#D97706"]];
+const PERMW=794000;               // upper 20-yr value per MW ($5M over 6.3 MW)
 const vw=document.getElementById('vbars');
-const L10=v=>Math.log10(v), vmin=L10(1000), vmax=L10(10000000);
-const px=v=>Math.max(2.5,((L10(v)-vmin)/(vmax-vmin))*100);
-const money=v=>v>=1e6?'$'+(v/1e6).toFixed(1)+'M':'$'+Math.round(v/1000)+'k';
-VB.forEach(([nm,cost,mw,c])=>{
- const vlo=mw*PERMW[0], vhi=mw*PERMW[1];
+const vmaxv=10.3*PERMW;
+const money=v=>v>=1e6?'$'+(v/1e6).toFixed(1)+'M':(v>0?'$'+Math.round(v/1000)+'k':'baseline');
+VB.forEach(([nm,tech,cost,mw,c])=>{
+ const val=mw*PERMW, pct=Math.max(mw?4:0,(val/vmaxv)*100), win=mw>=10;
  const d=document.createElement('div');d.className='vrow';
- d.innerHTML='<div class="vlab"><span><b style="font-size:12.5px;color:'+c+'">'+nm+'</b></span>'
-  +'<span style="font-size:11px">'+(mw?('+'+mw.toFixed(1)+' MW kept on'):'baseline')+'</span></div>'
-  +'<div class="vtrack mini"><div class="vfill" style="width:'+px(cost)+'%;background:'+c+';opacity:.55">COST £'+(cost/1000)+'k</div></div>'
-  +'<div class="vtrack mini"><div class="vfill" style="width:'+(mw?px(vhi):0)+'%;background:#B45309">'
-  +(mw?('WORTH '+money(vlo)+' – '+money(vhi)):'')+'</div></div>';
+ d.innerHTML='<div class="vlab"><span><b style="color:'+c+'">'+nm+'</b> '
+   +'<i style="color:#7C8AA0;font-style:normal;font-size:10.5px">'+tech+'</i></span>'
+   +'<span style="font-size:11px;color:#7C8AA0">costs <b style="font-family:var(--mono);color:'
+   +(cost>10000?'#B45309':'#059669')+'">£'+(cost/1000)+'k</b> to set up</span></div>'
+  +'<div class="vtrack"><div class="vfill" style="width:'+pct+'%;background:'+c+';opacity:'+(win?1:.72)+'">'
+  +(mw?money(val):'')+'</div>'+(win?'<span class="tick">★</span>':'')+'</div>';
  vw.appendChild(d);});
-const vs=document.createElement('div');vs.className='vscale';
-vs.innerHTML='<span>£1k</span><span>£10k</span><span>£100k</span><span>$1M</span><span>$10M</span>';
-vw.appendChild(vs);
+const cap=document.createElement('div');
+cap.style.cssText='font-size:10.5px;color:#7C8AA0;margin-top:5px';
+cap.innerHTML='Bar length: what each method\'s plan is worth over 20 years, compared with the weakest method. '
+ +'Upper-bound assumptions from the value tab.';
+vw.appendChild(cap);
 
 // maps
 const LEFT=METHODS.find(m=>m.id==='sv2');
