@@ -82,9 +82,13 @@ font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;font-weight:700}
 background:#fff;color:var(--accent);cursor:pointer;max-width:230px}
 .lg{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:-1px;margin-right:3px}
 .lg.dash{border:2px dashed #7C3AED}
-@keyframes pulseRing{0%,100%{stroke-opacity:.95;stroke-width:3}50%{stroke-opacity:.25;stroke-width:11}}
-.pulse{animation:pulseRing 2.4s ease-in-out infinite}
-.pulse.core{animation-duration:1.8s}
+.leaflet-popup-content{margin:10px 12px;font:13px/1.5 "Segoe UI",system-ui,sans-serif}
+.pop h4{margin:0 0 5px;font-size:14.5px}
+.pop .row{color:#42506A;font-size:12.5px;margin:2px 0}
+.pop .tagrow{margin-top:7px;padding-top:7px;border-top:1px solid #D8DEE9;font-size:12px}
+.pop .mtag{display:inline-block;padding:2px 7px;border-radius:11px;font-size:11px;
+font-weight:600;margin:2px 3px 0 0;color:#fff}
+.pop .none{color:#7C8AA0;font-size:12px}
 .hhead b{font-size:15px;display:block}.hhead span{color:var(--mut);font-size:11.5px}
 .mapbox{flex:1;min-height:0}
 .pick{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
@@ -240,8 +244,8 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
     </div>
     <div class="mapbox" id="mapOne"></div>
     <div class="diff" id="diff"></div>
-    <div class="note">Substation colour shows how overloaded it is on the worst day: red is worst, amber is
-    stretched, grey is comfortable. Batteries cluster where the trouble is. The purple star is the 400 MW AI
+    <div class="note"><b style="color:var(--ink)">Click any substation for its detail.</b>
+    Colour shows how loaded it is: red is heaviest, amber is stretched, grey is comfortable. Batteries cluster where the trouble is. The purple star is the 400 MW AI
     data centre. Scroll to zoom. Map layout is illustrative; the network and the results are real.</div>
   </div>
 </div>
@@ -352,10 +356,36 @@ GRID.buses.forEach(b=>{const r=b.load/lmax;
  L.circleMarker(AT[b.id],{radius:3+r*9,color:'#fff',weight:1,fillColor:col,
   fillOpacity:r>0.28?.75:.5}).addTo(M)
   .bindTooltip('Substation '+b.id.replace('Bus','')+' · demand '+b.load.toFixed(0)+' MW'+
-   (r>0.55?' · heavily loaded':r>0.28?' · stretched':''));});
+   (r>0.55?' · heavily loaded':r>0.28?' · stretched':'')+' · click for detail')
+  .on('click',()=>popup(parseInt(b.id.replace('Bus',''))));});
 L.marker(AT['Bus23'],{icon:L.divIcon({className:'dcstar',
  html:'<div style="font-size:24px;color:#7C3AED;text-shadow:0 0 4px #fff">★</div>',
  iconSize:[24,24],iconAnchor:[12,12]})}).addTo(M).bindTooltip('The 400 MW AI data centre');
+// how many connections each substation has
+const DEG={};GRID.buses.forEach(b=>DEG[b.id]=0);
+GRID.lines.forEach(l=>{if(DEG[l.a]!==undefined)DEG[l.a]++;if(DEG[l.b]!==undefined)DEG[l.b]++;});
+const LOADS=GRID.buses.map(b=>b.load), LMAX=Math.max(...LOADS);
+function popup(n){
+ const b=GRID.buses.find(x=>x.id==='Bus'+n);if(!b)return;
+ const r=b.load/LMAX;
+ const state=r>0.55?'heavily loaded':r>0.28?'stretched':'comfortable';
+ const chose=METHODS.filter(m=>m.buses.includes(n));
+ const certified=METHODS.find(m=>m.id==='milp').buses.includes(n);
+ let h='<div class="pop"><h4>Substation '+n+(n===23?' · AI data centre':'')+'</h4>'
+  +'<div class="row">Demand '+b.load.toFixed(0)+' MW · '+state+'</div>'
+  +'<div class="row">'+DEG[b.id]+' connections to the rest of the network</div>';
+ if(n===23) h+='<div class="row">The 400 MW AI data centre plugs in here</div>';
+ h+='<div class="tagrow">';
+ if(chose.length){
+  h+='<b>Chosen by '+chose.length+' of '+METHODS.length+' methods</b><br>'
+   +chose.map(m=>'<span class="mtag" style="background:'+m.color+'">'+(PRETTY[m.id]||m.name)+'</span>').join('');
+  if(certified) h+='<div class="row" style="margin-top:6px;color:#B45309"><b>In the certified optimal plan</b></div>';
+ } else {
+  h+='<span class="none">No method placed a battery here.</span>';
+ }
+ h+='</div></div>';
+ L.popup({maxWidth:280}).setLatLng(AT[b.id]).setContent(h).openOn(M);}
+
 let planLayer=[];
 function drawPlans(id){
  const m=METHODS.find(x=>x.id===id);
@@ -363,12 +393,13 @@ function drawPlans(id){
  const shared=LEFT.buses.filter(b=>m.buses.includes(b));
  const onlyL=LEFT.buses.filter(b=>!m.buses.includes(b));
  const onlyR=m.buses.filter(b=>!LEFT.buses.includes(b));
- const add=(n,col,txt,cls)=>{const p=AT['Bus'+n];if(!p)return;
-  planLayer.push(L.circleMarker(p,{radius:13,color:col,weight:4,fillColor:col,fillOpacity:.22,
-   className:'pulse'+(cls||'')}).addTo(M).bindTooltip(txt+' · Substation '+n));};
- shared.forEach(n=>add(n,'#059669','Both methods put a battery here',' core'));
- onlyL.forEach(n=>add(n,'#7C3AED','Only D-Wave Stride chose this'));
- onlyR.forEach(n=>add(n,m.color,'Only '+(PRETTY[m.id]||m.name)+' chose this'));
+ const add=(n,col,txt,strong)=>{const p=AT['Bus'+n];if(!p)return;
+  planLayer.push(L.circleMarker(p,{radius:13,color:col,weight:strong?4.5:3,
+   fillColor:col,fillOpacity:strong?.26:.14,dashArray:strong?null:'5,4'})
+   .addTo(M).bindTooltip(txt+' · Substation '+n).on('click',()=>popup(n)));};
+ shared.forEach(n=>add(n,'#059669','Both methods put a battery here',true));
+ onlyL.forEach(n=>add(n,'#7C3AED','Only D-Wave Stride chose this',false));
+ onlyR.forEach(n=>add(n,m.color,'Only '+(PRETTY[m.id]||m.name)+' chose this',false));
  document.getElementById('lgOther').style.background=m.color;
  const dl=parseFloat(LEFT.score.replace(/[^0-9.]/g,'')),dr=parseFloat(m.score.replace(/[^0-9.]/g,''));
  const gap=Math.abs(dr-dl);
