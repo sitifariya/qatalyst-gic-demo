@@ -40,13 +40,13 @@ letter-spacing:.11em;text-transform:uppercase;padding:6px 12px;flex:none}
 border-radius:9px;padding:10px 15px}
 .chip b{display:block;font-family:var(--mono);font-size:20px}
 .chip span{font-size:11.5px;color:var(--mut)}
-.twin{display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px;flex:1;min-height:0}
+.twin{display:grid;grid-template-rows:212px minmax(0,1fr);gap:10px;flex:1;min-height:0}
 .pair{display:grid;grid-template-columns:1.25fr 1fr;gap:11px;min-height:0}
-.pair .panel{min-height:0}
+.pair .panel{min-height:0;overflow:hidden}
 @media(max-width:1100px){.pair{grid-template-columns:1fr}}
 .twin .panel{min-height:0}
 .bars{padding:10px 14px 12px}
-.costs{padding:4px 0 2px}
+.costs{padding:2px 0 0;overflow:auto;flex:1;min-height:0}
 .crow{display:grid;grid-template-columns:104px 1fr 78px 96px;gap:7px;padding:6px 12px;
 align-items:center;font-size:11.8px;line-height:1.35;border-bottom:1px solid var(--line)}
 .crow:last-child{border-bottom:0}
@@ -85,6 +85,15 @@ border-radius:4px;display:inline-block}
 .ecert{font-size:12px;color:var(--mut)}
 .ecol ul{margin:13px 0 11px 18px;padding:0;font-size:13px;color:var(--dim)}.ecol li{margin:6px 0}
 .efoot{font-size:13px;font-weight:600;border-top:1px solid var(--line);padding-top:9px;margin-top:4px}
+.vbars{padding:14px 16px 6px;flex:1;display:flex;flex-direction:column;justify-content:center;gap:13px}
+.vrow{display:grid;grid-template-columns:1fr;gap:3px}
+.vlab{display:flex;justify-content:space-between;align-items:baseline;font-size:12px;color:var(--dim)}
+.vlab b{font-family:var(--mono);font-size:15px;color:var(--ink)}
+.vtrack{background:var(--bg);border-radius:5px;height:26px;overflow:hidden}
+.vfill{height:100%;border-radius:5px;display:flex;align-items:center;justify-content:flex-end;
+padding-right:8px;color:#fff;font-family:var(--mono);font-size:10px;letter-spacing:.06em}
+.vscale{display:flex;justify-content:space-between;font-family:var(--mono);font-size:9.5px;
+color:var(--mut);border-top:1px solid var(--line);padding-top:4px;margin-top:2px}
 .ledger{padding:6px 14px 4px;flex:1;display:flex;flex-direction:column;justify-content:center}
 .lrow{display:flex;justify-content:space-between;align-items:baseline;padding:6px 0;
 border-bottom:1px dashed var(--line);font-size:12.5px;color:var(--dim)}
@@ -171,18 +180,11 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
         <div class="note">Illustrative UK contractor rates. All four still need someone technical: none is
         usable by the planner who owns the decision. That gap is what our engine closes.</div>
       </div>
-      <div class="panel"><div class="phead">3 · The bottom line, quantum hybrid route</div>
-        <div class="ledger">
-          <div class="lrow"><span>People, one off</span><span class="amt">£500 – £2,000</span></div>
-          <div class="lrow"><span>Computer time, per run</span><span class="amt">about £4</span></div>
-          <div class="lrow tot"><span>Total to get the better plan</span><span class="amt">under £2,100</span></div>
-          <div class="lrow gain"><span>Value of demand kept flowing, per severe event</span><span class="amt">$126k – $252k</span></div>
-          <div class="lrow gain"><span>Over the 20-year life of the batteries</span><span class="amt">$1.3M – $5M</span></div>
-        </div>
-        <div class="note"><b style="color:var(--ink)">Roughly a thousand times what it cost.</b> So the
-        constraint is never the money, it is whether the right person is available. Specialists who can
-        rewrite a problem are scarce; every physics change sends you back to one.</div>
-      </div>
+      <div class="panel"><div class="phead">3 · What you pay, against what you get back</div>
+        <div class="vbars" id="vbars"></div>
+        <div class="note"><b style="color:var(--ink)">Each step across is ten times bigger.</b>
+        The cost bar is real, it is just too small to see next to the value. The constraint is never the
+        money, it is whether the right person is available.</div>
     </div>
   </div>
 </div>
@@ -306,6 +308,22 @@ cap.style.cssText='font-size:10.5px;color:#7C8AA0;margin-top:6px;padding-left:18
 cap.innerHTML='Out of 12,811 MW at risk on the worst day, the best plans keep 9,738 MW flowing. '
  +'The top two are separated by nothing at all.';
 wrap.appendChild(cap);
+// value vs cost, log scale (USD)
+const VB=[["What you pay to get the better plan","£2,100 (about $2,700)",2700,"#7C3AED","COST"],
+ ["Value each time a severe event hits","$126k – $252k",252000,"#B45309","PER EVENT"],
+ ["Value over the 20-year battery life","$1.3M – $5M",5000000,"#B45309","LIFETIME"]];
+const vw=document.getElementById('vbars');
+const L10=v=>Math.log10(v), vmin=L10(1000), vmax=L10(10000000);
+VB.forEach(([lab,txt,v,c,tag])=>{
+ const pct=Math.max(3,((L10(v)-vmin)/(vmax-vmin))*100);
+ const d=document.createElement('div');d.className='vrow';
+ d.innerHTML='<div class="vlab"><span>'+lab+'</span><b>'+txt+'</b></div>'
+  +'<div class="vtrack"><div class="vfill" style="width:'+pct+'%;background:'+c+'">'+tag+'</div></div>';
+ vw.appendChild(d);});
+const vs=document.createElement('div');vs.className='vscale';
+vs.innerHTML='<span>£1k</span><span>£10k</span><span>£100k</span><span>£1M</span><span>£10M</span>';
+vw.appendChild(vs);
+
 // maps
 const LEFT=METHODS.find(m=>m.id==='sv2');
 const PRETTY={milp:'Exact solver (with expert)',sv1:'Quantum hybrid, first version',
