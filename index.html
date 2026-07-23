@@ -86,7 +86,22 @@ border-radius:4px;display:inline-block}
 .ecert{font-size:12px;color:var(--mut)}
 .ecol ul{margin:13px 0 11px 18px;padding:0;font-size:13px;color:var(--dim)}.ecol li{margin:6px 0}
 .efoot{font-size:13px;font-weight:600;border-top:1px solid var(--line);padding-top:9px;margin-top:4px}
-.vbars{padding:12px 15px 6px;flex:1;display:flex;flex-direction:column;justify-content:center;gap:9px;overflow:hidden}
+.vchart{flex:1;display:grid;grid-template-columns:38px 1fr 40px;gap:6px;padding:12px 14px 2px;min-height:0}
+.ylab{display:flex;flex-direction:column;justify-content:space-between;font-family:var(--mono);
+font-size:9px;color:var(--mut);padding:2px 0 17px}
+.ylab.right{text-align:right}
+.cols{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:10px;align-items:end;
+border-left:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line);
+padding:0 6px}
+.col{display:flex;flex-direction:column;justify-content:flex-end;height:100%;gap:3px}
+.duo{display:flex;align-items:flex-end;justify-content:center;gap:5px;height:100%}
+.vb{width:34px;border-radius:3px 3px 0 0;position:relative;min-height:2px}
+.vb span{position:absolute;top:-15px;left:50%;transform:translateX(-50%);font-family:var(--mono);
+font-size:9.5px;font-weight:700;white-space:nowrap}
+.cname{text-align:center;font-size:11px;font-weight:700;padding-top:4px;line-height:1.2}
+.cname i{display:block;font-weight:400;font-style:normal;font-size:9.5px;color:var(--mut)}
+.vkey{display:flex;gap:16px;justify-content:center;font-size:10.5px;color:var(--mut);padding:2px 0 0}
+.vkey i{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:4px}
 .vrow{display:grid;grid-template-columns:1fr;gap:3px}
 .vlab{display:flex;justify-content:space-between;align-items:baseline;font-size:12.5px;color:var(--dim)}
 .vlab b{font-family:var(--mono);font-size:15px;color:var(--ink)}
@@ -184,10 +199,17 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
         usable by the planner who owns the decision. That gap is what our engine closes.</div>
       </div>
       <div class="panel key"><div class="phead key">★ Key finding · same value, a tenth of the cost</div>
-        <div class="vbars" id="vbars"></div>
-        <div class="note"><b style="color:var(--ink)">The two tallest bars are identical.</b>
-        The exact solver needs a specialist and about £20,000 of setup; the quantum hybrid reaches the same
-        plan for about £2,100 and an afternoon of an ordinary engineer.</div>
+        <div class="vchart">
+          <div class="ylab left"><span>$8M</span><span>$6M</span><span>$4M</span><span>$2M</span><span>0</span></div>
+          <div class="cols" id="vbars"></div>
+          <div class="ylab right"><span>£20k</span><span>£15k</span><span>£10k</span><span>£5k</span><span>0</span></div>
+        </div>
+        <div class="vkey"><span><i style="background:#B45309"></i>value of the plan, 20 years (left axis)</span>
+        <span><i style="background:#64748B"></i>cost to set up (right axis)</span></div>
+        <div class="note"><b style="color:var(--ink)">Same value, a tenth of the cost.</b> The first two
+        gold bars are identical: both plans are worth the same. The grey cost bars are not: the exact solver
+        needs a specialist and about £20,000 of setup, the quantum hybrid needs about £2,100 and an afternoon
+        of an ordinary engineer. Two scales: value in millions on the left, setup cost in thousands on the right.</div>
     </div>
   </div>
 </div>
@@ -315,27 +337,20 @@ wrap.appendChild(cap);
 // per method: [name, tech, setup+compute cost GBP, MW better than weakest, colour]
 const VB=[["Exact solver","MILP + specialist",20000,10.3,"#2563EB"],
  ["Quantum hybrid","D-Wave Stride",2100,10.3,"#7C3AED"],
- ["Greedy","classical algorithm",1500,4.0,"#059669"],
- ["Simulated annealing","classical search",1500,0,"#D97706"]];
-const PERMW=794000;               // upper 20-yr value per MW ($5M over 6.3 MW)
+ ["Greedy","classical",1500,4.0,"#059669"],
+ ["Sim. annealing","classical",1500,0,"#D97706"]];
+const PERMW=794000, VMAX=8.2e6, CMAX=20000;
 const vw=document.getElementById('vbars');
-const vmaxv=10.3*PERMW;
-const money=v=>v>=1e6?'$'+(v/1e6).toFixed(1)+'M':(v>0?'$'+Math.round(v/1000)+'k':'baseline');
+const money=v=>v>=1e6?'$'+(v/1e6).toFixed(1)+'M':(v>0?'$'+Math.round(v/1e3)+'k':'0');
 VB.forEach(([nm,tech,cost,mw,c])=>{
- const val=mw*PERMW, pct=Math.max(mw?4:0,(val/vmaxv)*100), win=mw>=10;
- const d=document.createElement('div');d.className='vrow';
- d.innerHTML='<div class="vlab"><span><b style="color:'+c+'">'+nm+'</b> '
-   +'<i style="color:#7C8AA0;font-style:normal;font-size:10.5px">'+tech+'</i></span>'
-   +'<span style="font-size:11px;color:#7C8AA0">costs <b style="font-family:var(--mono);color:'
-   +(cost>10000?'#B45309':'#059669')+'">£'+(cost/1000)+'k</b> to set up</span></div>'
-  +'<div class="vtrack"><div class="vfill" style="width:'+pct+'%;background:'+c+';opacity:'+(win?1:.72)+'">'
-  +(mw?money(val):'')+'</div>'+(win?'<span class="tick">★</span>':'')+'</div>';
+ const val=mw*PERMW;
+ const vh=Math.max(val>0?1.5:0,(val/VMAX)*100), ch=Math.max(1.5,(cost/CMAX)*100);
+ const d=document.createElement('div');d.className='col';
+ d.innerHTML='<div class="duo">'
+  +'<div class="vb" style="height:'+vh+'%;background:#B45309"><span style="color:#B45309">'+money(val)+'</span></div>'
+  +'<div class="vb" style="height:'+ch+'%;background:#64748B"><span style="color:#475569">£'+(cost/1000)+'k</span></div>'
+  +'</div><div class="cname" style="color:'+c+'">'+nm+'<i>'+tech+'</i></div>';
  vw.appendChild(d);});
-const vcap=document.createElement('div');
-vcap.style.cssText='font-size:10.5px;color:#7C8AA0;margin-top:5px';
-vcap.innerHTML='Bar length: what each method\'s plan is worth over 20 years, compared with the weakest method. '
- +'Upper-bound assumptions from the value tab.';
-vw.appendChild(vcap);
 
 // maps
 const LEFT=METHODS.find(m=>m.id==='sv2');
