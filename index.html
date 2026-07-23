@@ -69,8 +69,15 @@ font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;font-weight:700}
 .cmp{display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:0}
 .half{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
 .half:last-child{border-right:0}
-.hhead{padding:7px 13px;border-bottom:1px solid var(--line);font-size:12.5px;flex:none;min-height:56px}
-.hhead.pickhead{padding:6px 10px}
+.hhead{padding:8px 13px;border-bottom:1px solid var(--line);flex:none;height:74px;
+display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;align-items:center;gap:2px 10px}
+.mtitle{grid-column:1/3;font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;color:var(--mut)}
+.mname{font-size:15px;font-weight:700}
+.mname span{font-weight:400;font-size:11px;color:var(--mut)}
+.mscore{text-align:right;font-family:var(--mono);font-size:15px;font-weight:700}
+.mscore i{display:block;font-style:normal;font-size:10px;font-weight:400;color:var(--mut);font-family:"Segoe UI"}
+.msel{font:600 13.5px "Segoe UI";padding:5px 9px;border:1.5px solid var(--accent);border-radius:7px;
+background:#fff;color:var(--accent);cursor:pointer;max-width:230px}
 .lg{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:-1px;margin-right:3px}
 .lg.dash{border:2px dashed #7C3AED}
 @keyframes pulseRing{0%,100%{stroke-opacity:.95;stroke-width:3}50%{stroke-opacity:.25;stroke-width:11}}
@@ -217,19 +224,24 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
 
 <div class="view" id="v2">
   <h2>The plans</h2>
-  <div class="say tight">The quantum hybrid's plan is on the left, always. Pick any other method on the
-  right to compare. Pulsing circles are the eight battery sites; green means both methods chose it.
-  The two maps move together, so zoom or drag either one.</div>
+  <div class="say tight">Map 1 always shows the quantum hybrid's plan. Choose what to compare it with on
+  Map 2. Pulsing circles are the eight battery sites, green where both methods agree. Both maps move together,
+  so zoom or drag either one.</div>
   <div class="panel grow">
     <div class="cmp">
       <div class="half">
-        <div class="hhead fixed" id="hL"></div>
+        <div class="hhead">
+          <div class="mtitle">MAP 1</div>
+          <div class="mname" style="color:#7C3AED">D-Wave Stride <span>quantum hybrid</span></div>
+          <div class="mscore" id="hL"></div>
+        </div>
         <div class="mapbox" id="mapL"></div>
       </div>
       <div class="half">
-        <div class="hhead pickhead">
-          <div class="pick" id="pick"></div>
-          <div id="hR"></div>
+        <div class="hhead">
+          <div class="mtitle">MAP 2 · COMPARISON WITH</div>
+          <select id="pick" class="msel"></select>
+          <div class="mscore" id="hR"></div>
         </div>
         <div class="mapbox" id="mapR"></div>
       </div>
@@ -361,13 +373,12 @@ function plot(o,meth,shared){o.layer.forEach(x=>o.m.removeLayer(x));o.layer=[];
    className:'pulse'+(core?' core':'')})
    .addTo(o.m).bindTooltip((core?'Both methods chose this site · ':'Only this method chose it · ')
    +'Substation '+n,{permanent:false}));});}
-function head(el,m,tag){const p=(EXPOSURE-parseFloat(m.score.replace(/[^0-9.]/g,''))).toLocaleString(undefined,{maximumFractionDigits:0});
- document.getElementById(el).innerHTML='<b style="color:'+m.color+';font-size:15px">'+p+' MW kept on</b>'
- +'<span style="display:block;color:#7C8AA0;font-size:11.5px">'+tag+' — '+(PRETTY[m.id]||m.name)+'</span>';}
+function head(el,m){const p=(EXPOSURE-parseFloat(m.score.replace(/[^0-9.]/g,''))).toLocaleString(undefined,{maximumFractionDigits:0});
+ document.getElementById(el).innerHTML='<span style="color:'+m.color+'">'+p+'</span><i>MW kept on</i>';}
 function showR(id){const m=METHODS.find(x=>x.id===id);
- document.querySelectorAll('.pick button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
+ document.getElementById('pick').value=id;
  const shared=LEFT.buses.filter(b=>m.buses.includes(b));
- plot(L1,LEFT,shared);plot(R1,m,shared);head('hR',m,'compared with');
+ plot(L1,LEFT,shared);plot(R1,m,shared);head('hR',m);
  const dl=parseFloat(LEFT.score.replace(/[^0-9.]/g,'')),dr=parseFloat(m.score.replace(/[^0-9.]/g,''));
  const gap=Math.abs(dr-dl).toFixed(1);let v;
  if(Math.abs(dr-dl)<0.05)v='<b>A dead heat.</b> Identical scores, reached two different ways: the exact solver needed a specialist to rewrite the problem first; the quantum hybrid took it exactly as written.';
@@ -375,7 +386,8 @@ function showR(id){const m=METHODS.find(x=>x.id===id);
  else v='This method keeps <b>'+gap+' MW more</b> flowing than the quantum hybrid here.';
  document.getElementById('diff').innerHTML=v+' &nbsp;·&nbsp; Both chose substations <b>'+shared.join(', ')+'</b> ('+shared.length+' of 8).';}
 const pick=document.getElementById('pick');
-METHODS.filter(m=>m.id!=='sv2').forEach(m=>{const b=document.createElement('button');
- b.dataset.id=m.id;b.textContent=(PRETTY[m.id]||m.name);b.onclick=()=>showR(m.id);pick.appendChild(b);});
-head('hL',LEFT,'always shown — the quantum hybrid');showR('milp');
+METHODS.filter(m=>m.id!=='sv2').forEach(m=>{const o=document.createElement('option');
+ o.value=m.id;o.textContent=(PRETTY[m.id]||m.name);pick.appendChild(o);});
+pick.addEventListener('change',()=>showR(pick.value));
+head('hL',LEFT);showR('milp');
 </script></body></html>
