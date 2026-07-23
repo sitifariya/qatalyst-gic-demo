@@ -1,0 +1,136 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Qatalyst · Where Quantum Methods Belong in Storage Siting</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root{--chrome:#0D1117;--ink:#1A2233;--dim:#42506A;--mut:#7C8AA0;--line:#D8DEE9;
+--bg:#EDF0F4;--accent:#7C3AED;--accent2:#8B5CF6;--gold:#B45309;--mono:"Consolas",monospace}
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 "Segoe UI",system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+.top{background:var(--chrome);border-bottom:3px solid var(--accent);color:#E6EDF7;padding:12px 22px;display:flex;gap:14px;align-items:center}
+.top .q{color:var(--accent2);font-weight:800;font-size:19px}.top .wm{font-weight:700;letter-spacing:.12em}
+.top .sub{color:#8B96A8;font-family:var(--mono);font-size:11px;letter-spacing:.07em}
+.wrap{max-width:1060px;margin:0 auto;padding:26px 18px 60px}
+h1{font-size:30px;margin:8px 0 4px}h2{font-size:21px;margin:38px 0 6px}
+.lead{color:var(--dim);max-width:760px}
+.chips{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}
+.chip{background:#fff;border:1px solid var(--line);border-top:3px solid var(--accent);border-radius:9px;padding:10px 18px}
+.chip b{display:block;font-family:var(--mono);font-size:20px}.chip span{font-size:11.5px;color:var(--mut)}
+.panel{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:14px}
+.phead{background:var(--accent);color:#fff;font-family:var(--mono);font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;padding:8px 14px}
+#map{height:440px}
+.pick{display:flex;flex-wrap:wrap;gap:8px;padding:12px 14px;border-bottom:1px solid var(--line)}
+.pick button{border:1.5px solid var(--line);background:#fff;border-radius:20px;padding:6px 14px;font:600 13px "Segoe UI";cursor:pointer;color:var(--dim)}
+.pick button.on{border-color:var(--accent);color:var(--accent);background:rgba(124,58,237,.07)}
+.mstat{padding:10px 16px;font-size:14px;border-bottom:1px solid var(--line)}
+.mstat b{font-family:var(--mono);font-size:19px}
+.bars{padding:16px}
+.brow{display:grid;grid-template-columns:130px 1fr 90px;align-items:center;gap:10px;margin:7px 0}
+.brow .nm{font-size:13px;font-weight:600;text-align:right}.brow .v{font-family:var(--mono);font-size:13px;font-weight:700}
+.btrack{background:var(--bg);border-radius:5px;height:22px;position:relative}
+.bfill{height:100%;border-radius:5px}
+.floorline{position:absolute;top:-6px;bottom:-6px;width:2px;background:#DC2626}
+.money{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:16px}
+.mcard{border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:9px;padding:12px 16px}
+.mcard b{font-family:var(--mono);font-size:21px;color:var(--gold)}
+.mcard div{font-size:12px;color:var(--dim)}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{background:#222941;color:#F2CC74;text-align:left;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:9px 12px}
+td{padding:9px 12px;border-bottom:1px solid var(--line);vertical-align:top}
+tr.hot td{background:rgba(124,58,237,.07)}
+tr.hot td:nth-child(2){color:var(--accent);font-weight:700}
+td:nth-child(2){font-weight:600}
+.foot{color:var(--mut);font-size:12px;margin-top:26px;line-height:1.6}
+@media(max-width:640px){.money{grid-template-columns:1fr}.brow{grid-template-columns:92px 1fr 78px}}
+</style></head><body>
+<div class="top"><span class="q">◆</span><span class="wm">QATALYST</span>
+<span class="sub">GIC 2026 · US DOE TRACK · MEASURED RESULTS</span></div>
+<div class="wrap">
+<h1>Where quantum methods belong in storage siting</h1>
+<p class="lead">Eight grid batteries, a 400 MW AI data centre, the IEEE 118-bus system, and the worst
+weather day Ohio recorded in 2022. Every number below is a measured result, anchored to a
+mathematically certified optimum. Explore the plans each method chose.</p>
+<div class="chips">
+<div class="chip"><b>3,067.1 MW</b><span>certified floor: nothing can do better</span></div>
+<div class="chip"><b>3,073.3 MW</b><span>exact solver and hybrid, tied at 120 s</span></div>
+<div class="chip"><b>5 / 5</b><span>hybrid wins vs metaheuristics, equal time</span></div>
+<div class="chip"><b>0 spread</b><span>3 hybrid runs, identical result</span></div>
+</div>
+
+<h2>The plans, on the grid</h2>
+<p class="lead">Real IEEE 118-bus topology (illustrative Ohio geography). Pick a method to see the
+eight buses it chose and what its plan scores on the design event.</p>
+<div class="panel"><div class="phead">Battery placement by method · NSRDB design event (Winter Storm Elliott)</div>
+<div class="pick" id="pick"></div><div class="mstat" id="mstat"></div><div id="map"></div></div>
+
+<h2>The race, at equal time</h2>
+<div class="panel"><div class="phead">Worst-scenario residual load-not-served · 120 s per method · lower is better</div>
+<div class="bars" id="bars"></div></div>
+
+<h2>What the gap is worth</h2>
+<div class="panel"><div class="phead">The 6.3 MW between the certified plan and the best heuristic</div>
+<div class="money">
+<div class="mcard"><b>$126k – $252k</b><div>per avoided worst-day event<br>6.3 MW × 4 h × $5–10k per MWh</div></div>
+<div class="mcard"><b>$1.3M – $5M</b><div>over a 20-year asset life<br>one event per 1–2 years · solver cost: single-digit dollars</div></div>
+</div></div>
+
+<h2>The boundary map</h2>
+<p class="lead">The full campaign, honestly: which method wins on which problem shape, losses included.</p>
+<div class="panel"><table><tr><th>Problem shape</th><th>Best method (measured)</th><th>Evidence</th></tr>
+<tr class=""><td>Average-case siting (diminishing returns)</td><td>Greedy heuristic</td><td>99.6% of maximum in 2.2 s; nothing can win</td></tr>
+<tr class=""><td>Robust worst-case, exact translation exists</td><td>Exact MILP</td><td>Certified optimum; wins or ties every equal-time race</td></tr>
+<tr class="hot"><td>Robust worst-case, no reformulation</td><td>Stride hybrid</td><td>5/5 vs metaheuristics; matches certified quality, zero spread</td></tr>
+<tr class=""><td>High-fidelity signed physics</td><td>Greedy + local</td><td>Exact collapses (57-61% gap); Stride ties greedy at 0.006%</td></tr>
+<tr class=""><td>Microgrid partitioning</td><td>Domain heuristic</td><td>0.829 in <1 s; Stride 0.780; exact times out</td></tr>
+<tr class=""><td>Fleet routing (CVRPLIB)</td><td>Classical stack</td><td>Proven optimum reached (0.00% certified gap); Stride +0.13%</td></tr>
+</table></div>
+
+<p class="foot">Methodology: equal wall-clock budgets, one shared scorer, stochastic methods over repeated runs,
+certified optima via HiGHS MILP, weather from NSRDB PSM3 (Columbus OH, 2022). Geography is illustrative;
+topology, loads and results are real. Full harness, per-run JSON and write-up: Qatalyst Quantum, GIC 2026 Phase 3
+submission (US DoE Energy Infrastructure track). qatalyst-quantum.co.uk</p>
+</div>
+<script>
+const GRID = {"buses": [{"id": "Bus1", "load": 51.0, "lat": 40.6575, "lon": -84.6}, {"id": "Bus2", "load": 20.0, "lat": 40.7239, "lon": -84.5223}, {"id": "Bus3", "load": 39.0, "lat": 40.5481, "lon": -84.469}, {"id": "Bus4", "load": 39.0, "lat": 40.3527, "lon": -84.4355}, {"id": "Bus5", "load": 0.0, "lat": 40.3642, "lon": -84.3461}, {"id": "Bus6", "load": 52.0, "lat": 40.4182, "lon": -84.5022}, {"id": "Bus7", "load": 19.0, "lat": 40.5823, "lon": -84.5119}, {"id": "Bus8", "load": 28.0, "lat": 40.2453, "lon": -84.095}, {"id": "Bus9", "load": 0.0, "lat": 40.0673, "lon": -84.2498}, {"id": "Bus10", "load": 0.0, "lat": 39.9413, "lon": -84.3684}, {"id": "Bus11", "load": 70.0, "lat": 40.4524, "lon": -84.3394}, {"id": "Bus12", "load": 47.0, "lat": 40.6362, "lon": -84.3637}, {"id": "Bus13", "load": 34.0, "lat": 40.3836, "lon": -84.1838}, {"id": "Bus14", "load": 14.0, "lat": 40.5056, "lon": -84.1909}, {"id": "Bus15", "load": 90.0, "lat": 40.3439, "lon": -83.9944}, {"id": "Bus16", "load": 25.0, "lat": 40.6686, "lon": -84.145}, {"id": "Bus17", "load": 11.0, "lat": 40.6145, "lon": -83.9059}, {"id": "Bus18", "load": 60.0, "lat": 40.4374, "lon": -83.8965}, {"id": "Bus19", "load": 45.0, "lat": 40.2489, "lon": -83.8255}, {"id": "Bus20", "load": 18.0, "lat": 40.4685, "lon": -83.7251}, {"id": "Bus21", "load": 14.0, "lat": 40.6554, "lon": -83.6052}, {"id": "Bus22", "load": 10.0, "lat": 40.7879, "lon": -83.4823}, {"id": "Bus23", "load": 7.0, "lat": 40.8268, "lon": -83.3677}, {"id": "Bus24", "load": 13.0, "lat": 40.6026, "lon": -83.0492}, {"id": "Bus25", "load": 0.0, "lat": 40.8968, "lon": -83.5566}, {"id": "Bus26", "load": 0.0, "lat": 40.6075, "lon": -83.6728}, {"id": "Bus27", "load": 71.0, "lat": 41.1833, "lon": -83.6306}, {"id": "Bus28", "load": 17.0, "lat": 41.3287, "lon": -83.7437}, {"id": "Bus29", "load": 24.0, "lat": 41.2069, "lon": -83.8218}, {"id": "Bus30", "load": 0.0, "lat": 40.2839, "lon": -83.7707}, {"id": "Bus31", "load": 43.0, "lat": 40.9498, "lon": -83.8041}, {"id": "Bus32", "load": 59.0, "lat": 41.0044, "lon": -83.6162}, {"id": "Bus33", "load": 23.0, "lat": 40.0407, "lon": -83.8271}, {"id": "Bus34", "load": 59.0, "lat": 39.9332, "lon": -83.6911}, {"id": "Bus35", "load": 33.0, "lat": 39.6709, "lon": -83.7381}, {"id": "Bus36", "load": 31.0, "lat": 39.7718, "lon": -83.7806}, {"id": "Bus37", "load": 0.0, "lat": 39.7867, "lon": -83.6236}, {"id": "Bus38", "load": 0.0, "lat": 39.9157, "lon": -83.4635}, {"id": "Bus39", "load": 27.0, "lat": 39.5979, "lon": -83.5635}, {"id": "Bus40", "load": 66.0, "lat": 39.5597, "lon": -83.4308}, {"id": "Bus41", "load": 37.0, "lat": 39.4333, "lon": -83.3357}, {"id": "Bus42", "load": 96.0, "lat": 39.4419, "lon": -83.192}, {"id": "Bus43", "load": 18.0, "lat": 39.7832, "lon": -83.494}, {"id": "Bus44", "load": 16.0, "lat": 39.6621, "lon": -83.2822}, {"id": "Bus45", "load": 53.0, "lat": 39.5388, "lon": -83.061}, {"id": "Bus46", "load": 28.0, "lat": 39.5619, "lon": -82.9188}, {"id": "Bus47", "load": 34.0, "lat": 39.6095, "lon": -82.798}, {"id": "Bus48", "load": 20.0, "lat": 39.4584, "lon": -82.8601}, {"id": "Bus49", "load": 87.0, "lat": 39.3762, "lon": -82.898}, {"id": "Bus50", "load": 17.0, "lat": 39.1244, "lon": -82.845}, {"id": "Bus51", "load": 17.0, "lat": 39.0426, "lon": -82.7836}, {"id": "Bus52", "load": 18.0, "lat": 38.8209, "lon": -82.7078}, {"id": "Bus53", "load": 23.0, "lat": 38.723, "lon": -82.7839}, {"id": "Bus54", "load": 113.0, "lat": 38.9301, "lon": -82.8908}, {"id": "Bus55", "load": 63.0, "lat": 38.7, "lon": -82.921}, {"id": "Bus56", "load": 84.0, "lat": 38.7621, "lon": -82.8736}, {"id": "Bus57", "load": 12.0, "lat": 38.8952, "lon": -82.8236}, {"id": "Bus58", "load": 12.0, "lat": 38.8149, "lon": -82.7723}, {"id": "Bus59", "load": 277.0, "lat": 38.7898, "lon": -82.994}, {"id": "Bus60", "load": 78.0, "lat": 38.769, "lon": -83.1024}, {"id": "Bus61", "load": 0.0, "lat": 38.8983, "lon": -83.0976}, {"id": "Bus62", "load": 77.0, "lat": 38.9935, "lon": -83.1208}, {"id": "Bus63", "load": 0.0, "lat": 38.9435, "lon": -83.0555}, {"id": "Bus64", "load": 0.0, "lat": 39.1934, "lon": -83.0982}, {"id": "Bus65", "load": 0.0, "lat": 39.6138, "lon": -83.1012}, {"id": "Bus66", "load": 39.0, "lat": 39.2811, "lon": -83.0673}, {"id": "Bus67", "load": 28.0, "lat": 39.098, "lon": -83.1508}, {"id": "Bus68", "load": 0.0, "lat": 39.7412, "lon": -82.7252}, {"id": "Bus69", "load": 0.0, "lat": 39.8431, "lon": -82.6619}, {"id": "Bus70", "load": 66.0, "lat": 40.2869, "lon": -82.7719}, {"id": "Bus71", "load": 0.0, "lat": 40.591, "lon": -82.8058}, {"id": "Bus72", "load": 12.0, "lat": 40.6841, "lon": -82.9242}, {"id": "Bus73", "load": 6.0, "lat": 40.7941, "lon": -82.7653}, {"id": "Bus74", "load": 68.0, "lat": 40.2561, "lon": -82.6478}, {"id": "Bus75", "load": 47.0, "lat": 40.1009, "lon": -82.5577}, {"id": "Bus76", "load": 68.0, "lat": 40.1285, "lon": -82.3426}, {"id": "Bus77", "load": 61.0, "lat": 39.955, "lon": -82.3074}, {"id": "Bus78", "load": 71.0, "lat": 40.0524, "lon": -82.1933}, {"id": "Bus79", "load": 39.0, "lat": 40.1109, "lon": -82.0963}, {"id": "Bus80", "load": 130.0, "lat": 40.0197, "lon": -82.0347}, {"id": "Bus81", "load": 0.0, "lat": 39.8688, "lon": -82.3759}, {"id": "Bus82", "load": 54.0, "lat": 39.806, "lon": -81.9934}, {"id": "Bus83", "load": 20.0, "lat": 39.5776, "lon": -81.7436}, {"id": "Bus84", "load": 11.0, "lat": 39.4424, "lon": -81.6286}, {"id": "Bus85", "load": 24.0, "lat": 39.444, "lon": -81.5238}, {"id": "Bus86", "load": 21.0, "lat": 39.2128, "lon": -81.3982}, {"id": "Bus87", "load": 0.0, "lat": 39.0545, "lon": -81.3007}, {"id": "Bus88", "load": 48.0, "lat": 39.4513, "lon": -81.4083}, {"id": "Bus89", "load": 0.0, "lat": 39.6299, "lon": -81.4079}, {"id": "Bus90", "load": 163.0, "lat": 39.6442, "lon": -81.2815}, {"id": "Bus91", "load": 10.0, "lat": 39.7995, "lon": -81.3106}, {"id": "Bus92", "load": 65.0, "lat": 39.9387, "lon": -81.4394}, {"id": "Bus93", "load": 12.0, "lat": 39.9891, "lon": -81.4988}, {"id": "Bus94", "load": 30.0, "lat": 40.0211, "lon": -81.6074}, {"id": "Bus95", "load": 42.0, "lat": 39.9715, "lon": -81.707}, {"id": "Bus96", "load": 38.0, "lat": 39.9612, "lon": -81.8384}, {"id": "Bus97", "load": 15.0, "lat": 40.0158, "lon": -81.9251}, {"id": "Bus98", "load": 34.0, "lat": 40.128, "lon": -81.7672}, {"id": "Bus99", "load": 42.0, "lat": 40.1754, "lon": -81.7742}, {"id": "Bus100", "load": 37.0, "lat": 40.2348, "lon": -81.5101}, {"id": "Bus101", "load": 22.0, "lat": 40.1796, "lon": -81.3825}, {"id": "Bus102", "load": 5.0, "lat": 40.0402, "lon": -81.3345}, {"id": "Bus103", "load": 23.0, "lat": 40.4196, "lon": -81.2689}, {"id": "Bus104", "load": 38.0, "lat": 40.397, "lon": -81.3513}, {"id": "Bus105", "load": 31.0, "lat": 40.5556, "lon": -81.2491}, {"id": "Bus106", "load": 43.0, "lat": 40.4841, "lon": -81.3706}, {"id": "Bus107", "load": 50.0, "lat": 40.6466, "lon": -81.2894}, {"id": "Bus108", "load": 2.0, "lat": 40.6917, "lon": -81.1111}, {"id": "Bus109", "load": 8.0, "lat": 40.7208, "lon": -81.0064}, {"id": "Bus110", "load": 39.0, "lat": 40.5622, "lon": -81.0414}, {"id": "Bus111", "load": 0.0, "lat": 40.6674, "lon": -80.9103}, {"id": "Bus112", "load": 68.0, "lat": 40.5633, "lon": -80.9}, {"id": "Bus113", "load": 6.0, "lat": 40.8486, "lon": -83.7801}, {"id": "Bus114", "load": 8.0, "lat": 41.2708, "lon": -83.6084}, {"id": "Bus115", "load": 22.0, "lat": 41.4, "lon": -83.6243}, {"id": "Bus116", "load": 184.0, "lat": 39.6684, "lon": -82.629}, {"id": "Bus117", "load": 20.0, "lat": 40.8173, "lon": -84.4598}, {"id": "Bus118", "load": 33.0, "lat": 40.1854, "lon": -82.4417}], "lines": [{"a": "Bus1", "b": "Bus2", "cap": 9900.0}, {"a": "Bus1", "b": "Bus3", "cap": 9900.0}, {"a": "Bus4", "b": "Bus5", "cap": 9900.0}, {"a": "Bus3", "b": "Bus5", "cap": 9900.0}, {"a": "Bus5", "b": "Bus6", "cap": 9900.0}, {"a": "Bus6", "b": "Bus7", "cap": 9900.0}, {"a": "Bus8", "b": "Bus9", "cap": 9900.0}, {"a": "Bus9", "b": "Bus10", "cap": 9900.0}, {"a": "Bus4", "b": "Bus11", "cap": 9900.0}, {"a": "Bus5", "b": "Bus11", "cap": 9900.0}, {"a": "Bus11", "b": "Bus12", "cap": 9900.0}, {"a": "Bus2", "b": "Bus12", "cap": 9900.0}, {"a": "Bus3", "b": "Bus12", "cap": 9900.0}, {"a": "Bus7", "b": "Bus12", "cap": 9900.0}, {"a": "Bus11", "b": "Bus13", "cap": 9900.0}, {"a": "Bus12", "b": "Bus14", "cap": 9900.0}, {"a": "Bus13", "b": "Bus15", "cap": 9900.0}, {"a": "Bus14", "b": "Bus15", "cap": 9900.0}, {"a": "Bus12", "b": "Bus16", "cap": 9900.0}, {"a": "Bus15", "b": "Bus17", "cap": 9900.0}, {"a": "Bus16", "b": "Bus17", "cap": 9900.0}, {"a": "Bus17", "b": "Bus18", "cap": 9900.0}, {"a": "Bus18", "b": "Bus19", "cap": 9900.0}, {"a": "Bus19", "b": "Bus20", "cap": 9900.0}, {"a": "Bus15", "b": "Bus19", "cap": 9900.0}, {"a": "Bus20", "b": "Bus21", "cap": 9900.0}, {"a": "Bus21", "b": "Bus22", "cap": 9900.0}, {"a": "Bus22", "b": "Bus23", "cap": 9900.0}, {"a": "Bus23", "b": "Bus24", "cap": 9900.0}, {"a": "Bus23", "b": "Bus25", "cap": 9900.0}, {"a": "Bus25", "b": "Bus27", "cap": 9900.0}, {"a": "Bus27", "b": "Bus28", "cap": 9900.0}, {"a": "Bus28", "b": "Bus29", "cap": 9900.0}, {"a": "Bus8", "b": "Bus30", "cap": 9900.0}, {"a": "Bus26", "b": "Bus30", "cap": 9900.0}, {"a": "Bus17", "b": "Bus31", "cap": 9900.0}, {"a": "Bus29", "b": "Bus31", "cap": 9900.0}, {"a": "Bus23", "b": "Bus32", "cap": 9900.0}, {"a": "Bus31", "b": "Bus32", "cap": 9900.0}, {"a": "Bus27", "b": "Bus32", "cap": 9900.0}, {"a": "Bus15", "b": "Bus33", "cap": 9900.0}, {"a": "Bus19", "b": "Bus34", "cap": 9900.0}, {"a": "Bus35", "b": "Bus36", "cap": 9900.0}, {"a": "Bus35", "b": "Bus37", "cap": 9900.0}, {"a": "Bus33", "b": "Bus37", "cap": 9900.0}, {"a": "Bus34", "b": "Bus36", "cap": 9900.0}, {"a": "Bus34", "b": "Bus37", "cap": 9900.0}, {"a": "Bus37", "b": "Bus39", "cap": 9900.0}, {"a": "Bus37", "b": "Bus40", "cap": 9900.0}, {"a": "Bus30", "b": "Bus38", "cap": 9900.0}, {"a": "Bus39", "b": "Bus40", "cap": 9900.0}, {"a": "Bus40", "b": "Bus41", "cap": 9900.0}, {"a": "Bus40", "b": "Bus42", "cap": 9900.0}, {"a": "Bus41", "b": "Bus42", "cap": 9900.0}, {"a": "Bus43", "b": "Bus44", "cap": 9900.0}, {"a": "Bus34", "b": "Bus43", "cap": 9900.0}, {"a": "Bus44", "b": "Bus45", "cap": 9900.0}, {"a": "Bus45", "b": "Bus46", "cap": 9900.0}, {"a": "Bus46", "b": "Bus47", "cap": 9900.0}, {"a": "Bus46", "b": "Bus48", "cap": 9900.0}, {"a": "Bus47", "b": "Bus49", "cap": 9900.0}, {"a": "Bus42", "b": "Bus49", "cap": 9900.0}, {"a": "Bus42", "b": "Bus49", "cap": 9900.0}, {"a": "Bus45", "b": "Bus49", "cap": 9900.0}, {"a": "Bus48", "b": "Bus49", "cap": 9900.0}, {"a": "Bus49", "b": "Bus50", "cap": 9900.0}, {"a": "Bus49", "b": "Bus51", "cap": 9900.0}, {"a": "Bus51", "b": "Bus52", "cap": 9900.0}, {"a": "Bus52", "b": "Bus53", "cap": 9900.0}, {"a": "Bus53", "b": "Bus54", "cap": 9900.0}, {"a": "Bus49", "b": "Bus54", "cap": 9900.0}, {"a": "Bus49", "b": "Bus54", "cap": 9900.0}, {"a": "Bus54", "b": "Bus55", "cap": 9900.0}, {"a": "Bus54", "b": "Bus56", "cap": 9900.0}, {"a": "Bus55", "b": "Bus56", "cap": 9900.0}, {"a": "Bus56", "b": "Bus57", "cap": 9900.0}, {"a": "Bus50", "b": "Bus57", "cap": 9900.0}, {"a": "Bus56", "b": "Bus58", "cap": 9900.0}, {"a": "Bus51", "b": "Bus58", "cap": 9900.0}, {"a": "Bus54", "b": "Bus59", "cap": 9900.0}, {"a": "Bus56", "b": "Bus59", "cap": 9900.0}, {"a": "Bus56", "b": "Bus59", "cap": 9900.0}, {"a": "Bus55", "b": "Bus59", "cap": 9900.0}, {"a": "Bus59", "b": "Bus60", "cap": 9900.0}, {"a": "Bus59", "b": "Bus61", "cap": 9900.0}, {"a": "Bus60", "b": "Bus61", "cap": 9900.0}, {"a": "Bus60", "b": "Bus62", "cap": 9900.0}, {"a": "Bus61", "b": "Bus62", "cap": 9900.0}, {"a": "Bus63", "b": "Bus64", "cap": 9900.0}, {"a": "Bus38", "b": "Bus65", "cap": 9900.0}, {"a": "Bus64", "b": "Bus65", "cap": 9900.0}, {"a": "Bus49", "b": "Bus66", "cap": 9900.0}, {"a": "Bus49", "b": "Bus66", "cap": 9900.0}, {"a": "Bus62", "b": "Bus66", "cap": 9900.0}, {"a": "Bus62", "b": "Bus67", "cap": 9900.0}, {"a": "Bus66", "b": "Bus67", "cap": 9900.0}, {"a": "Bus47", "b": "Bus69", "cap": 9900.0}, {"a": "Bus49", "b": "Bus69", "cap": 9900.0}, {"a": "Bus69", "b": "Bus70", "cap": 9900.0}, {"a": "Bus24", "b": "Bus70", "cap": 9900.0}, {"a": "Bus70", "b": "Bus71", "cap": 9900.0}, {"a": "Bus24", "b": "Bus72", "cap": 9900.0}, {"a": "Bus71", "b": "Bus72", "cap": 9900.0}, {"a": "Bus71", "b": "Bus73", "cap": 9900.0}, {"a": "Bus70", "b": "Bus74", "cap": 9900.0}, {"a": "Bus70", "b": "Bus75", "cap": 9900.0}, {"a": "Bus69", "b": "Bus75", "cap": 9900.0}, {"a": "Bus74", "b": "Bus75", "cap": 9900.0}, {"a": "Bus76", "b": "Bus77", "cap": 9900.0}, {"a": "Bus69", "b": "Bus77", "cap": 9900.0}, {"a": "Bus75", "b": "Bus77", "cap": 9900.0}, {"a": "Bus77", "b": "Bus78", "cap": 9900.0}, {"a": "Bus78", "b": "Bus79", "cap": 9900.0}, {"a": "Bus77", "b": "Bus80", "cap": 9900.0}, {"a": "Bus77", "b": "Bus80", "cap": 9900.0}, {"a": "Bus79", "b": "Bus80", "cap": 9900.0}, {"a": "Bus77", "b": "Bus82", "cap": 9900.0}, {"a": "Bus82", "b": "Bus83", "cap": 9900.0}, {"a": "Bus83", "b": "Bus84", "cap": 9900.0}, {"a": "Bus83", "b": "Bus85", "cap": 9900.0}, {"a": "Bus84", "b": "Bus85", "cap": 9900.0}, {"a": "Bus85", "b": "Bus86", "cap": 9900.0}, {"a": "Bus85", "b": "Bus88", "cap": 9900.0}, {"a": "Bus85", "b": "Bus89", "cap": 9900.0}, {"a": "Bus88", "b": "Bus89", "cap": 9900.0}, {"a": "Bus89", "b": "Bus90", "cap": 9900.0}, {"a": "Bus89", "b": "Bus90", "cap": 9900.0}, {"a": "Bus90", "b": "Bus91", "cap": 9900.0}, {"a": "Bus89", "b": "Bus92", "cap": 9900.0}, {"a": "Bus89", "b": "Bus92", "cap": 9900.0}, {"a": "Bus91", "b": "Bus92", "cap": 9900.0}, {"a": "Bus92", "b": "Bus93", "cap": 9900.0}, {"a": "Bus92", "b": "Bus94", "cap": 9900.0}, {"a": "Bus93", "b": "Bus94", "cap": 9900.0}, {"a": "Bus94", "b": "Bus95", "cap": 9900.0}, {"a": "Bus80", "b": "Bus96", "cap": 9900.0}, {"a": "Bus82", "b": "Bus96", "cap": 9900.0}, {"a": "Bus94", "b": "Bus96", "cap": 9900.0}, {"a": "Bus80", "b": "Bus97", "cap": 9900.0}, {"a": "Bus80", "b": "Bus98", "cap": 9900.0}, {"a": "Bus80", "b": "Bus99", "cap": 9900.0}, {"a": "Bus92", "b": "Bus100", "cap": 9900.0}, {"a": "Bus94", "b": "Bus100", "cap": 9900.0}, {"a": "Bus95", "b": "Bus96", "cap": 9900.0}, {"a": "Bus96", "b": "Bus97", "cap": 9900.0}, {"a": "Bus98", "b": "Bus100", "cap": 9900.0}, {"a": "Bus99", "b": "Bus100", "cap": 9900.0}, {"a": "Bus100", "b": "Bus101", "cap": 9900.0}, {"a": "Bus92", "b": "Bus102", "cap": 9900.0}, {"a": "Bus101", "b": "Bus102", "cap": 9900.0}, {"a": "Bus100", "b": "Bus103", "cap": 9900.0}, {"a": "Bus100", "b": "Bus104", "cap": 9900.0}, {"a": "Bus103", "b": "Bus104", "cap": 9900.0}, {"a": "Bus103", "b": "Bus105", "cap": 9900.0}, {"a": "Bus100", "b": "Bus106", "cap": 9900.0}, {"a": "Bus104", "b": "Bus105", "cap": 9900.0}, {"a": "Bus105", "b": "Bus106", "cap": 9900.0}, {"a": "Bus105", "b": "Bus107", "cap": 9900.0}, {"a": "Bus105", "b": "Bus108", "cap": 9900.0}, {"a": "Bus106", "b": "Bus107", "cap": 9900.0}, {"a": "Bus108", "b": "Bus109", "cap": 9900.0}, {"a": "Bus103", "b": "Bus110", "cap": 9900.0}, {"a": "Bus109", "b": "Bus110", "cap": 9900.0}, {"a": "Bus110", "b": "Bus111", "cap": 9900.0}, {"a": "Bus110", "b": "Bus112", "cap": 9900.0}, {"a": "Bus17", "b": "Bus113", "cap": 9900.0}, {"a": "Bus32", "b": "Bus113", "cap": 9900.0}, {"a": "Bus32", "b": "Bus114", "cap": 9900.0}, {"a": "Bus27", "b": "Bus115", "cap": 9900.0}, {"a": "Bus114", "b": "Bus115", "cap": 9900.0}, {"a": "Bus12", "b": "Bus117", "cap": 9900.0}, {"a": "Bus75", "b": "Bus118", "cap": 9900.0}, {"a": "Bus76", "b": "Bus118", "cap": 9900.0}, {"a": "Bus8", "b": "Bus5", "cap": 9900.0}, {"a": "Bus26", "b": "Bus25", "cap": 9900.0}, {"a": "Bus30", "b": "Bus17", "cap": 9900.0}, {"a": "Bus38", "b": "Bus37", "cap": 9900.0}, {"a": "Bus63", "b": "Bus59", "cap": 9900.0}, {"a": "Bus64", "b": "Bus61", "cap": 9900.0}, {"a": "Bus65", "b": "Bus66", "cap": 9900.0}, {"a": "Bus65", "b": "Bus68", "cap": 9900.0}, {"a": "Bus68", "b": "Bus69", "cap": 9900.0}, {"a": "Bus81", "b": "Bus68", "cap": 9900.0}, {"a": "Bus81", "b": "Bus80", "cap": 9900.0}, {"a": "Bus87", "b": "Bus86", "cap": 9900.0}, {"a": "Bus116", "b": "Bus68", "cap": 9900.0}]};
+const METHODS = [{"id": "milp", "name": "Exact MILP (HiGHS)", "score": "3,073.3 MW", "extra": "certified floor 3,067.1 \u00b7 gap 0.20%", "buses": [5, 22, 23, 25, 27, 55, 114, 115], "color": "#2563EB", "note": "Needs an OR expert to build. Provides the proof."}, {"id": "sv2", "name": "Stride v2 (D-Wave hybrid)", "score": "3,073.3 MW", "extra": "3 runs \u00b7 zero spread \u00b7 no reformulation", "buses": [5, 22, 23, 25, 27, 32, 55, 115], "color": "#7C3AED", "note": "Takes the problem as written. Matches the exact solver's quality."}, {"id": "sv1", "name": "Stride v1", "score": "3,074.0 MW", "extra": "best of 4 runs (3,074.0 to 3,075.8)", "buses": [6, 22, 23, 25, 27, 55, 114, 115], "color": "#A78BFA", "note": "Original construction, before vendor-guided vectorisation."}, {"id": "greedy", "name": "Greedy + local search", "score": "3,079.6 MW", "extra": "deterministic \u00b7 free \u00b7 seconds", "buses": [2, 6, 22, 23, 25, 27, 32, 55], "color": "#059669", "note": "The strong cheap baseline. Wins easy problems outright."}, {"id": "sa", "name": "Simulated annealing", "score": "3,083.6 MW", "extra": "deterministic seeds", "buses": [6, 20, 22, 23, 25, 27, 59, 114], "color": "#D97706", "note": "Generic metaheuristic."}];
+const map = L.map('map',{scrollWheelZoom:false}).setView([40.1,-82.7],7);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+ {attribution:'© OpenStreetMap © CARTO'}).addTo(map);
+const at={}; GRID.buses.forEach(b=>at[b.id]=[b.lat,b.lon]);
+GRID.lines.forEach(l=>{const a=at[l.a],b=at[l.b];
+ if(a&&b)L.polyline([a,b],{color:'#8891a5',weight:1,opacity:.45,interactive:false}).addTo(map);});
+GRID.buses.forEach(b=>L.circleMarker([b.lat,b.lon],
+ {radius:3.5+Math.min(7,b.load/12),color:'#fff',weight:1,fillColor:'#64748B',fillOpacity:.85})
+ .addTo(map).bindTooltip(b.id+(b.id==='Bus23'?' · AI data centre':'')+' · load '+b.load.toFixed(0)+' MW'));
+const dc=at['Bus23'];
+L.circleMarker(dc,{radius:11,color:'#2E1560',weight:2,fillColor:'#7C3AED',fillOpacity:.9})
+ .addTo(map).bindTooltip('Bus23 · 400 MW AI data centre');
+let layer=[];
+function show(id){const m=METHODS.find(x=>x.id===id);
+ document.querySelectorAll('.pick button').forEach(b=>b.classList.toggle('on',b.dataset.id===id));
+ layer.forEach(x=>map.removeLayer(x));layer=[];
+ m.buses.forEach(n=>{const p=at['Bus'+n];if(!p)return;
+   layer.push(L.circleMarker(p,{radius:12,color:m.color,weight:3,fillColor:m.color,fillOpacity:.28})
+     .addTo(map).bindTooltip(m.name+' · Bus'+n));});
+ document.getElementById('mstat').innerHTML =
+  '<b style="color:'+m.color+'">'+m.score+'</b> &nbsp; '+m.extra+
+  ' &nbsp;·&nbsp; <span style="color:#7C8AA0">'+m.note+'</span>';}
+const pick=document.getElementById('pick');
+METHODS.forEach(m=>{const b=document.createElement('button');b.dataset.id=m.id;
+ b.textContent=m.name;b.onclick=()=>show(m.id);pick.appendChild(b);});
+show('sv2');
+// bars
+const BARS=[["Exact MILP", 3073.3, "#2563EB"], ["Stride v2", 3073.3, "#7C3AED"], ["Stride v1", 3074.0, "#A78BFA"], ["Greedy+local", 3079.6, "#059669"], ["Sim. annealing", 3083.6, "#D97706"]];const lo=3060,hi=3090,floor=3067.1;
+const wrap=document.getElementById('bars');
+BARS.forEach(([nm,v,c])=>{const pct=(v-lo)/(hi-lo)*100,fp=(floor-lo)/(hi-lo)*100;
+ const d=document.createElement('div');d.className='brow';
+ d.innerHTML='<div class="nm">'+nm+'</div><div class="btrack">'
+  +'<div class="bfill" style="width:'+pct+'%;background:'+c+'"></div>'
+  +'<div class="floorline" style="left:'+fp+'%" title="certified floor 3,067.1"></div></div>'
+  +'<div class="v">'+v.toLocaleString(undefined,{minimumFractionDigits:1})+'</div>';
+ wrap.appendChild(d);});
+const cap=document.createElement('div');
+cap.style.cssText='font-size:11.5px;color:#7C8AA0;margin-top:6px';
+cap.innerHTML='Red line: the certified floor, 3,067.1 MW. No plan, by any method, can beat it.';
+wrap.appendChild(cap);
+</script></body></html>
