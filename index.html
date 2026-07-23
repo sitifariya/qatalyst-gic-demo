@@ -74,12 +74,20 @@ font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;font-weight:700}
 .legend2{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--dim);margin-left:auto}
 .legend2 i{margin-right:4px}
 .mtitle{grid-column:1/3;font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;color:var(--mut)}
+.mtitle.big{grid-column:auto;font-family:"Segoe UI",system-ui,sans-serif;font-size:15.5px;
+font-weight:800;letter-spacing:.04em;color:var(--accent)}
+.selwrap{position:relative;display:inline-flex;align-items:center}
+.selwrap .caret{position:absolute;right:10px;pointer-events:none;color:#fff;font-size:12px}
+.hint{font-size:11px;color:var(--mut);font-style:italic}
 .mname{font-size:15px;font-weight:700}
 .mname span{font-weight:400;font-size:11px;color:var(--mut)}
 .mscore{text-align:right;font-family:var(--mono);font-size:15px;font-weight:700}
 .mscore i{display:block;font-style:normal;font-size:10px;font-weight:400;color:var(--mut);font-family:"Segoe UI"}
-.msel{font:600 13.5px "Segoe UI";padding:5px 9px;border:1.5px solid var(--accent);border-radius:7px;
-background:#fff;color:var(--accent);cursor:pointer;max-width:230px}
+.msel{font:700 13.5px "Segoe UI";padding:7px 30px 7px 13px;border:0;border-radius:8px;
+background:var(--accent);color:#fff;cursor:pointer;max-width:265px;appearance:none;
+box-shadow:0 2px 9px -3px rgba(124,58,237,.7)}
+.msel:hover{background:var(--accent2)}
+.msel option{background:#fff;color:var(--ink);font-weight:600}
 .lg{display:inline-block;width:10px;height:10px;border-radius:50%;vertical-align:-1px;margin-right:3px}
 .lg.dash{border:2px dashed #7C3AED}
 .leaflet-popup-content{margin:10px 12px;font:13px/1.5 "Segoe UI",system-ui,sans-serif}
@@ -92,7 +100,7 @@ font-weight:600;margin:2px 3px 0 0;color:#fff}
 .hhead b{font-size:15px;display:block}.hhead span{color:var(--mut);font-size:11.5px}
 .mapbox{flex:1;min-height:0}
 .maphold{position:relative;flex:1;min-height:0;display:flex}
-.floatcard{position:absolute;z-index:900;left:14px;top:14px;max-width:335px;
+.floatcard{position:absolute;z-index:900;left:14px;bottom:16px;max-width:360px;
 background:rgba(255,255,255,.96);border:1px solid var(--line);border-left:4px solid var(--accent);
 border-radius:0 9px 9px 0;padding:11px 14px;font-size:13px;line-height:1.5;
 box-shadow:0 6px 20px -10px rgba(20,30,50,.45)}
@@ -238,8 +246,9 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
 <div class="view" id="v2">
   <div class="panel grow tall">
     <div class="hhead one">
-      <div class="mtitle">D-WAVE STRIDE COMPARED WITH</div>
-      <select id="pick" class="msel"></select>
+      <div class="mtitle big">D-WAVE STRIDE COMPARED WITH</div>
+      <div class="selwrap"><select id="pick" class="msel"></select><span class="caret">▾</span></div>
+      <span class="hint">click to change</span>
       <div class="legend2">
         <span><i class="lg" style="background:#059669"></i>both chose this site</span>
         <span><i class="lg" style="background:#7C3AED"></i>only Stride</span>
