@@ -69,8 +69,10 @@ font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;font-weight:700}
 .cmp{display:grid;grid-template-columns:1fr 1fr;flex:1;min-height:0}
 .half{border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
 .half:last-child{border-right:0}
-.hhead{padding:8px 13px;border-bottom:1px solid var(--line);flex:none;height:74px;
-display:grid;grid-template-columns:1fr auto;grid-template-rows:auto auto;align-items:center;gap:2px 10px}
+.hhead{padding:8px 13px;border-bottom:1px solid var(--line);flex:none}
+.hhead.one{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.legend2{display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:var(--dim);margin-left:auto}
+.legend2 i{margin-right:4px}
 .mtitle{grid-column:1/3;font-family:var(--mono);font-size:9.5px;letter-spacing:.13em;color:var(--mut)}
 .mname{font-size:15px;font-weight:700}
 .mname span{font-weight:400;font-size:11px;color:var(--mut)}
@@ -224,34 +226,23 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
 
 <div class="view" id="v2">
   <h2>The plans</h2>
-  <div class="say tight">Map 1 always shows the quantum hybrid's plan. Choose what to compare it with on
-  Map 2. Pulsing circles are the eight battery sites, green where both methods agree. Both maps move together,
-  so zoom or drag either one.</div>
+  <div class="say tight" id="planSay"></div>
   <div class="panel grow">
-    <div class="cmp">
-      <div class="half">
-        <div class="hhead">
-          <div class="mtitle">MAP 1</div>
-          <div class="mname" style="color:#7C3AED">D-Wave Stride <span>quantum hybrid</span></div>
-          <div class="mscore" id="hL"></div>
-        </div>
-        <div class="mapbox" id="mapL"></div>
-      </div>
-      <div class="half">
-        <div class="hhead">
-          <div class="mtitle">MAP 2 · COMPARISON WITH</div>
-          <select id="pick" class="msel"></select>
-          <div class="mscore" id="hR"></div>
-        </div>
-        <div class="mapbox" id="mapR"></div>
+    <div class="hhead one">
+      <div class="mtitle">D-WAVE STRIDE COMPARED WITH</div>
+      <select id="pick" class="msel"></select>
+      <div class="legend2">
+        <span><i class="lg" style="background:#059669"></i>both chose this site</span>
+        <span><i class="lg" style="background:#7C3AED"></i>only Stride</span>
+        <span><i class="lg" id="lgOther"></i>only the other method</span>
+        <span><i class="lg" style="background:#DC2626;opacity:.55"></i>substation under stress</span>
       </div>
     </div>
+    <div class="mapbox" id="mapOne"></div>
     <div class="diff" id="diff"></div>
-    <div class="note"><span class="lg" style="background:#059669"></span> both methods put a battery here
-    &nbsp;·&nbsp; <span class="lg dash"></span> only this method chose it
-    &nbsp;·&nbsp; grey dots are substations, bigger means more demand
-    &nbsp;·&nbsp; the purple star is the 400 MW AI data centre
-    &nbsp;·&nbsp; map layout is illustrative; the network and results are real</div>
+    <div class="note">Substation colour shows how overloaded it is on the worst day: red is worst, amber is
+    stretched, grey is comfortable. Batteries cluster where the trouble is. The purple star is the 400 MW AI
+    data centre. Scroll to zoom. Map layout is illustrative; the network and the results are real.</div>
   </div>
 </div>
 
@@ -345,49 +336,57 @@ VB.forEach(([nm,tech,cost,mw,c])=>{
   +'<i style="font-size:9.5px">$'+(val/1e6).toFixed(1)+'M value · £'+(cost/1000)+'k setup</i></div>';
  vw.appendChild(d);});
 
-// maps
+// one map, both plans overlaid, stress underneath
 const LEFT=METHODS.find(m=>m.id==='sv2');
 const PRETTY={milp:'Exact solver (MILP)',sv1:'Quantum hybrid, first build',
  greedy:'Greedy (classical algorithm)',sa:'Simulated annealing',sv2:'Quantum hybrid (D-Wave Stride)'};
-function mkmap(el,ctrl){const m=L.map(el,{scrollWheelZoom:true,zoomControl:!!ctrl}).setView([40.1,-82.7],6);
- L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© OSM © CARTO'}).addTo(m);
- const at={};GRID.buses.forEach(b=>at[b.id]=[b.lat,b.lon]);
- GRID.lines.forEach(l=>{const a=at[l.a],b=at[l.b];
-  if(a&&b)L.polyline([a,b],{color:'#8891a5',weight:1,opacity:.4,interactive:false}).addTo(m);});
- GRID.buses.forEach(b=>L.circleMarker([b.lat,b.lon],
-  {radius:3+Math.min(6,b.load/14),color:'#fff',weight:1,fillColor:'#64748B',fillOpacity:.8})
-  .addTo(m).bindTooltip('Substation '+b.id.replace('Bus','')+' · demand '+b.load.toFixed(0)+' MW'));
- L.marker(at['Bus23'],{icon:L.divIcon({className:'dcstar',html:'<div style="font-size:21px;color:#7C3AED;text-shadow:0 0 3px #fff">★</div>',iconSize:[21,21],iconAnchor:[10,10]})})
-  .addTo(m).bindTooltip('The 400 MW AI data centre');
- return {m,at,layer:[]};}
-const L1=mkmap('mapL',true),R1=mkmap('mapR',false);window.L1=L1;window.R1=R1;
-// keep both maps looking at the same place
-let syncing=false;
-function sync(a,b){a.m.on('move zoom',()=>{if(syncing)return;syncing=true;
- b.m.setView(a.m.getCenter(),a.m.getZoom(),{animate:false});syncing=false;});}
-sync(L1,R1);sync(R1,L1);
-function plot(o,meth,shared){o.layer.forEach(x=>o.m.removeLayer(x));o.layer=[];
- meth.buses.forEach(n=>{const p=o.at['Bus'+n];if(!p)return;const core=shared&&shared.includes(n);
-  o.layer.push(L.circleMarker(p,{radius:core?11:10,color:core?'#059669':meth.color,weight:3,
-   fillColor:core?'#059669':meth.color,fillOpacity:core?.4:.2,dashArray:core?null:'4,3',
-   className:'pulse'+(core?' core':'')})
-   .addTo(o.m).bindTooltip((core?'Both methods chose this site · ':'Only this method chose it · ')
-   +'Substation '+n,{permanent:false}));});}
-function head(el,m){const p=(EXPOSURE-parseFloat(m.score.replace(/[^0-9.]/g,''))).toLocaleString(undefined,{maximumFractionDigits:0});
- document.getElementById(el).innerHTML='<span style="color:'+m.color+'">'+p+'</span><i>MW kept on</i>';}
-function showR(id){const m=METHODS.find(x=>x.id===id);
- document.getElementById('pick').value=id;
+const M=L.map('mapOne',{scrollWheelZoom:true}).setView([40.1,-82.7],6.4);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© OSM © CARTO'}).addTo(M);
+const AT={};GRID.buses.forEach(b=>AT[b.id]=[b.lat,b.lon]);
+GRID.lines.forEach(l=>{const a=AT[l.a],b=AT[l.b];
+ if(a&&b)L.polyline([a,b],{color:'#98A2B3',weight:1,opacity:.5,interactive:false}).addTo(M);});
+// stress proxy: local demand share, used only to colour the background dots
+const loads=GRID.buses.map(b=>b.load), lmax=Math.max(...loads);
+GRID.buses.forEach(b=>{const r=b.load/lmax;
+ const col=r>0.55?'#DC2626':r>0.28?'#D97706':'#94A3B8';
+ L.circleMarker(AT[b.id],{radius:3+r*9,color:'#fff',weight:1,fillColor:col,
+  fillOpacity:r>0.28?.75:.5}).addTo(M)
+  .bindTooltip('Substation '+b.id.replace('Bus','')+' · demand '+b.load.toFixed(0)+' MW'+
+   (r>0.55?' · heavily loaded':r>0.28?' · stretched':''));});
+L.marker(AT['Bus23'],{icon:L.divIcon({className:'dcstar',
+ html:'<div style="font-size:24px;color:#7C3AED;text-shadow:0 0 4px #fff">★</div>',
+ iconSize:[24,24],iconAnchor:[12,12]})}).addTo(M).bindTooltip('The 400 MW AI data centre');
+let planLayer=[];
+function drawPlans(id){
+ const m=METHODS.find(x=>x.id===id);
+ planLayer.forEach(x=>M.removeLayer(x));planLayer=[];
  const shared=LEFT.buses.filter(b=>m.buses.includes(b));
- plot(L1,LEFT,shared);plot(R1,m,shared);head('hR',m);
+ const onlyL=LEFT.buses.filter(b=>!m.buses.includes(b));
+ const onlyR=m.buses.filter(b=>!LEFT.buses.includes(b));
+ const add=(n,col,txt,cls)=>{const p=AT['Bus'+n];if(!p)return;
+  planLayer.push(L.circleMarker(p,{radius:13,color:col,weight:4,fillColor:col,fillOpacity:.22,
+   className:'pulse'+(cls||'')}).addTo(M).bindTooltip(txt+' · Substation '+n));};
+ shared.forEach(n=>add(n,'#059669','Both methods put a battery here',' core'));
+ onlyL.forEach(n=>add(n,'#7C3AED','Only D-Wave Stride chose this'));
+ onlyR.forEach(n=>add(n,m.color,'Only '+(PRETTY[m.id]||m.name)+' chose this'));
+ document.getElementById('lgOther').style.background=m.color;
  const dl=parseFloat(LEFT.score.replace(/[^0-9.]/g,'')),dr=parseFloat(m.score.replace(/[^0-9.]/g,''));
- const gap=Math.abs(dr-dl).toFixed(1);let v;
- if(Math.abs(dr-dl)<0.05)v='<b>A dead heat.</b> Identical scores, reached two different ways: the exact solver needed a specialist to rewrite the problem first; the quantum hybrid took it exactly as written.';
- else if(dr>dl)v='The quantum hybrid keeps <b>'+gap+' MW more</b> demand flowing on the worst day, and needed no specialist to set up.';
- else v='This method keeps <b>'+gap+' MW more</b> flowing than the quantum hybrid here.';
- document.getElementById('diff').innerHTML=v+' &nbsp;·&nbsp; Both chose substations <b>'+shared.join(', ')+'</b> ('+shared.length+' of 8).';}
+ const gap=Math.abs(dr-dl);
+ const pL=(EXPOSURE-dl).toLocaleString(undefined,{maximumFractionDigits:0});
+ const pR=(EXPOSURE-dr).toLocaleString(undefined,{maximumFractionDigits:0});
+ document.getElementById('planSay').innerHTML=
+  '<b>'+shared.length+' of the 8 sites are the same.</b> The '+(8-shared.length)+
+  ' that differ change the outcome by '+(gap<0.05?'nothing at all':gap.toFixed(1)+' MW')+
+  '. Planners can swap between equally good plans when permitting or land gets in the way.';
+ document.getElementById('diff').innerHTML=
+  '<b style="color:#7C3AED">D-Wave Stride: '+pL+' MW kept on</b> &nbsp;·&nbsp; '
+  +'<b style="color:'+m.color+'">'+(PRETTY[m.id]||m.name)+': '+pR+' MW kept on</b>'
+  +(gap<0.05?' &nbsp;·&nbsp; a dead heat, reached two different ways'
+            :' &nbsp;·&nbsp; a difference of '+gap.toFixed(1)+' MW');}
 const pick=document.getElementById('pick');
 METHODS.filter(m=>m.id!=='sv2').forEach(m=>{const o=document.createElement('option');
  o.value=m.id;o.textContent=(PRETTY[m.id]||m.name);pick.appendChild(o);});
-pick.addEventListener('change',()=>showR(pick.value));
-head('hL',LEFT);showR('milp');
+pick.addEventListener('change',()=>drawPlans(pick.value));
+drawPlans('milp');
+window.L1={m:M};window.R1={m:M};
 </script></body></html>
