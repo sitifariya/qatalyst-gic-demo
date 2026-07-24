@@ -238,15 +238,20 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
       </div>
       <div class="panel"><div class="phead">The story</div>
         <div class="story">
-        <p>Real planning is a stream of what-ifs. New budget, a refused site, a bigger data centre. And some
-        changes don't wait: a line goes down, or an EV charging hub suddenly pulls far more power than
-        planned, and the plan must be redone <i>now</i>.</p>
-        <p>We added one new rule, a spending cap, and gave every method to the problem exactly as it stands.
-        The standard greedy method didn't error, it quietly returned plans with two batteries missing. A wrong
-        answer that looks right. The exact solver collapsed. Annealing lost ground.</p>
-        <p><b>The hybrid took the new rule as one extra line, and returned the same winning plan every run,
-        straight away. When the grid changes faster than tools can be re-tuned, the method that needs no
-        re-tuning wins.</b></p>
+        <p><i>Why we ran this test.</i> Planning rules change: a spending cap arrives, a site is refused,
+        an EV charging hub grows faster than forecast. Each change makes a slightly different problem, and
+        someone has to re-run it, often with no time to re-engineer the tools first.</p>
+        <p><i>What we actually tested.</i> One such change, a hard spending cap, with every substation given
+        its own build cost. Every method was handed the new problem exactly as it stands, with no
+        modification. The standard greedy method did not error: it quietly returned a plan with two of the
+        eight batteries missing, a wrong answer that looks right. The exact solver collapsed to a 51 to 67
+        percent gap. Annealing kept to the budget but lost by 25 MW.</p>
+        <p><b>The hybrid needed no rebuilding at all: the budget was one extra line in the problem
+        description, and it returned the identical winning plan on every run. When the rules change faster
+        than the tools can be re-engineered, the method that needs no re-engineering wins.</b></p>
+        <p style="font-size:11.5px;color:var(--mut)">Measured: three runs, two budget settings, all reported.
+        The line outage and charging-hub examples above are illustrations of the kind of change, not
+        additional experiments.</p>
         </div>
       </div>
     </div>
