@@ -26,6 +26,12 @@ font-size:13.5px;cursor:pointer;margin-bottom:3px}
 .view{padding:13px 20px;overflow:hidden;display:none;height:100%}
 .view.on{display:flex;flex-direction:column}
 h2{margin:0 0 3px;font-size:19px}
+.subtabs{display:flex;gap:7px;margin:2px 0 10px}
+.subtabs button{border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:6px 14px;
+font:600 12.5px "Segoe UI";cursor:pointer;color:var(--dim)}
+.subtabs button.on{border-color:var(--accent);background:var(--accent);color:#fff}
+.sub{display:none;flex:1;min-height:0;flex-direction:column}
+.sub.on{display:flex}
 .say{background:#fff;border-left:4px solid var(--accent);border-radius:0 8px 8px 0;
 padding:9px 14px;margin:0 0 10px;font-size:13.5px;font-weight:600;max-width:1100px}
 .say.tight{padding:7px 13px;font-size:13px;margin-bottom:9px}
@@ -187,7 +193,6 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
   <a data-v="v0" class="on"><span class="i">▶</span> The question</a>
   <a data-v="v1"><span class="i">▤</span> The result</a>
   <a data-v="v2"><span class="i">◉</span> The plans</a>
-  <a data-v="v7"><span class="i">£</span> The budget test <span style="font-size:8.5px;background:var(--gold);color:#fff;border-radius:8px;padding:1px 6px;vertical-align:1px">NEW</span></a>
   <div class="grp">THE FULL PICTURE</div>
   <a data-v="v5"><span class="i">▦</span> Where quantum wins</a>
   <a data-v="v6"><span class="i">ⓘ</span> How we tested</a>
@@ -217,8 +222,38 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
 </div>
 
 <div class="view" id="v1">
-  <h2>Who won, what it cost, what it's worth</h2>
-  <div class="twin">
+  <h2>The result</h2>
+  <div class="subtabs">
+    <button class="on" data-c="c1">Case 1 · When the rules change overnight</button>
+    <button data-c="c2">Case 2 · The design-event benchmark</button>
+  </div>
+  <div class="sub on" id="c1">
+    <div class="say tight">A spending cap appears, or an EV hub surges, and the plan must be redone now,
+    with the tools as they exist. No time to re-engineer anything.</div>
+    <div class="ktwin">
+      <div class="panel"><div class="phead">Demand kept flowing, tools used exactly as they are · longer is better</div>
+        <div class="bars" id="kbars"></div>
+      </div>
+      <div class="panel"><div class="phead">The story</div>
+        <div class="story">
+        <p>Real planning is a stream of what-ifs. New budget, a refused site, a bigger data centre. And some
+        changes don't wait: a line goes down, or an EV charging hub suddenly pulls far more power than
+        planned, and the plan must be redone <i>now</i>.</p>
+        <p>We added one new rule, a spending cap, and gave every method to the problem exactly as it stands.
+        The standard greedy method didn't error, it quietly returned plans with two batteries missing. A wrong
+        answer that looks right. The exact solver collapsed. Annealing lost ground.</p>
+        <p><b>The hybrid took the new rule as one extra line, and returned the same winning plan every run,
+        straight away. When the grid changes faster than tools can be re-tuned, the method that needs no
+        re-tuning wins.</b></p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="sub" id="c2">
+    <div class="say tight">The benchmark case: the worst weather day, no last-minute changes, every method
+    given its best shot at equal time. Two methods tied for the best answer; one needed a rare specialist,
+    the other did not.</div>
+    <div class="twin">
     <div class="pair">
       <div class="panel"><div class="phead">1 · How good is the answer? · longer is better</div>
         <div class="bars" id="bars"></div>
@@ -252,10 +287,32 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
       <span>It matches the exact solver's plan, for a tenth of the setup.</span></div>
     </div>
   </div>
+
+  </div>
 </div>
 
 <div class="view" id="v2">
-  <div class="panel grow tall">
+  <h2>The plans</h2>
+  <div class="subtabs">
+    <button class="on" data-c="m1">Map 1 · when the rules change</button>
+    <button data-c="m2">Map 2 · the design-event benchmark</button>
+  </div>
+  <div class="sub on" id="m1">
+    <div class="panel grow tall">
+      <div class="hhead one">
+        <span class="mtitle big">Under the new rule: Stride vs</span>
+        <div class="selwrap"><select id="kpick" class="msel"></select><span class="caret">▾</span></div>
+      </div>
+      <div class="maphold">
+        <div class="mapbox" id="mapK"></div>
+        <div class="floatcard" id="kSay"></div>
+      </div>
+      <div class="note">Every method used exactly as it stands, the day the rule changed. The purple star is
+      the AI data centre; substation colour shows loading. Scroll to zoom.</div>
+    </div>
+  </div>
+  <div class="sub" id="m2">
+    <div class="panel grow tall">
     <div class="hhead one">
       <span class="mtitle big">D-Wave Stride vs</span>
       <div class="selwrap"><select id="pick" class="msel"></select><span class="caret">▾</span></div>
@@ -273,49 +330,7 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
     Colour shows how loaded it is: red is heaviest, amber is stretched, grey is comfortable. Batteries cluster where the trouble is. The purple star is the 400 MW AI
     data centre. Scroll to zoom. Map layout is illustrative; the network and the results are real.</div>
   </div>
-</div>
 
-<div class="view" id="v7">
-  <h2>The budget test: the most realistic problem, and the clearest win</h2>
-  <div class="say tight">Real sites cost different amounts, and plans must fit a budget. We capped spending so
-  the old favourite plan was unaffordable, for every method equally. The everyday greedy method broke.
-  The quantum hybrid, unchanged, came first.</div>
-  <div class="ktwin">
-    <div class="kleft">
-    <div class="panel"><div class="phead">Demand kept flowing under the budget · longer is better</div>
-      <div class="bars" id="kbars"></div>
-    </div>
-    <div class="panel"><div class="phead">When this matters</div>
-      <div class="story">
-      <p>Real planning is a stream of what-ifs. New budget, a refused site, a bigger data centre. And some
-      changes don't wait for a study: a line goes down, or an EV charging hub suddenly pulls far more power
-      than planned, and the plan must be redone <i>now</i>.</p>
-      <p>Our test showed what happens when just one new rule appears. A spending cap, and the standard method
-      didn't error, it quietly returned plans with two batteries missing. A wrong answer that looks right,
-      flowing straight into someone's decision.</p>
-      <p>We fixed it, but that took an engineer: time to notice, time to understand why it broke, time to
-      rebuild and recheck. Hours or days, while the pipeline keeps running on wrong answers. For the broken
-      line or the surging chargers, the fix arrives after the moment that needed it.</p>
-      <p><b>The hybrid took the new rule as one extra line, same right answer, every run, straight away.
-      When the grid changes faster than a method can be re-tuned, the method that never needs re-tuning
-      wins.</b></p>
-      </div>
-    </div>
-    </div>
-    <div class="panel grow"><div class="phead">The plans under the budget</div>
-      <div class="hhead one">
-        <span class="mtitle big">Stride vs</span>
-        <div class="selwrap"><select id="kpick" class="msel"></select><span class="caret">▾</span></div>
-      </div>
-      <div class="maphold">
-        <div class="mapbox" id="mapK"></div>
-        <div class="floatcard" id="kSay"></div>
-      </div>
-      <div class="note">Replicated: three runs across two budget settings. The hybrid finished first or
-      joint-first in every run with an identical plan each time. The rebuilt greedy tied twice and lost once
-      to its own time limit; annealing lost every run; the exact solver collapsed every run. One extra line
-      in the hybrid's problem description handled the budget; no other method survived unmodified.</div>
-    </div>
   </div>
 </div>
 
@@ -533,38 +548,28 @@ const KEXP=12811.3;
 const KM=[
  {id:'kstride',name:'Quantum hybrid (Stride)',score:3100.1,color:'#7C3AED',
   buses:[5,7,23,25,28,55,114,115],note:'ran unchanged; identical answer every run, on both budget instances'},
- {id:'kgreedy',name:'Greedy, rebuilt cost-aware',score:3100.1,color:'#059669',
-  buses:[5,7,23,25,28,55,114,115],note:'ties when its repair finishes in time; on one run it hit the clock and lost by 62 MW'},
  {id:'kmilp',name:'Exact solver (MILP)',score:4189.5,color:'#2563EB',
   buses:[5,23,25,28,55,89,114,115],note:'collapsed on every run: 51-67% gap, no useful certificate'},
  {id:'ksa',name:'Simulated annealing',score:3124.7,color:'#D97706',
   buses:[5,17,22,25,28,55,114,115],note:'respected the budget, lost by 21-35 MW on every run'},
  {id:'knaive',name:'Greedy, unmodified',score:5313.1,color:'#DC2626',
   buses:[5,23,25,27,28,55],note:'BROKE: overspent early, placed only 6 of 8 batteries'}];
-// bars: grouped by availability on the day
+// case-1 bars: tools exactly as they stand
 (function(){
  const wrap=document.getElementById('kbars');
- const NOW=['kstride','ksa','kmilp','knaive'], LATER=['kgreedy'];
- const all=KM.map(m=>KEXP-m.score); const bmax=Math.max(...all);
+ const bmax=Math.max(...KM.map(m=>KEXP-m.score));
  const blo=7400, bhi=bmax+40;
- const row=(m,grey)=>{const v=KEXP-m.score;
-  const pct=(v-blo)/(bhi-blo)*100, win=!grey&&Math.abs(v-bmax)<0.05;
+ KM.forEach(m=>{const v=KEXP-m.score;
+  const pct=(v-blo)/(bhi-blo)*100, win=Math.abs(v-bmax)<0.05;
   const d=document.createElement('div');d.className='brow';
-  d.innerHTML='<div class="nm">'+m.name.replace('Greedy, rebuilt cost-aware','Greedy, after repair')+'</div>'
+  d.innerHTML='<div class="nm">'+m.name+'</div>'
    +'<div class="btrack"><div class="bfill" style="width:'+Math.max(pct,2)+'%;background:'+m.color
-   +';opacity:'+(grey?.38:(win?1:.6))+'">'+(win?'<span class="badge">BEST</span>':'')+'</div></div>'
+   +';opacity:'+(win?1:.6)+'">'+(win?'<span class="badge">BEST</span>':'')+'</div></div>'
    +'<div class="v"><b>'+v.toLocaleString(undefined,{maximumFractionDigits:0})+' MW</b></div>';
-  wrap.appendChild(d);};
- const glab=t=>{const g=document.createElement('div');
-  g.style.cssText='font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--mut);margin:7px 0 2px';
-  g.textContent=t;wrap.appendChild(g);};
- glab('AVAILABLE IMMEDIATELY, THE DAY THE RULE CHANGES');
- NOW.forEach(id=>row(KM.find(m=>m.id===id),false));
- glab('ONLY AFTER DAYS OF ENGINEERING REPAIR');
- LATER.forEach(id=>row(KM.find(m=>m.id===id),true));
+  wrap.appendChild(d);});
  const c=document.createElement('div');
- c.style.cssText='font-size:10.5px;color:#7C8AA0;margin-top:5px';
- c.innerHTML='On the day, the hybrid wins outright. The repaired greedy ties it, but the repair is exactly the time a fast-moving situation does not give you.';
+ c.style.cssText='font-size:10.5px;color:#7C8AA0;margin-top:6px';
+ c.innerHTML='The greedy bar is not a mistake: under the new rule it overspent and finished with six of eight batteries. Replicated over three runs; the hybrid returned the identical plan every time.';
  wrap.appendChild(c);})();
 // map
 const KMAP=L.map('mapK',{scrollWheelZoom:true}).setView([40.1,-82.7],6.2);
@@ -599,7 +604,14 @@ const kp=document.getElementById('kpick');
 KM.filter(m=>m.id!=='kstride').forEach(m=>{const o=document.createElement('option');
  o.value=m.id;o.textContent=m.name;kp.appendChild(o);});
 kp.addEventListener('change',()=>kShow(kp.value));
-kShow('kgreedy');
+kShow('knaive');
+// sub-tab switching
+document.querySelectorAll('.subtabs button').forEach(b=>b.addEventListener('click',()=>{
+ const box=b.closest('.view');
+ box.querySelectorAll('.subtabs button').forEach(x=>x.classList.remove('on'));
+ box.querySelectorAll('.sub').forEach(x=>x.classList.remove('on'));
+ b.classList.add('on');box.querySelector('#'+b.dataset.c).classList.add('on');
+ setTimeout(()=>{try{M.invalidateSize();KMAP.invalidateSize();}catch(e){}},80);}));
 // map resize on tab switch
 document.querySelectorAll('.rail a').forEach(a=>a.addEventListener('click',()=>{
  setTimeout(()=>{try{KMAP.invalidateSize();}catch(e){}},80);}));
