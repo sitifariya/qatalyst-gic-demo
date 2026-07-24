@@ -202,22 +202,27 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
 
 <div class="view on" id="v0">
   <h2>The question</h2>
-  <div class="say">A power grid has to survive its worst day. Batteries help, but only if you put them
-  in the right places. There are 21 billion ways to choose 8 locations out of 118. Which computer
-  should pick?</div>
+  <div class="say">A power grid has to survive its worst day. Batteries help, but only if you put them in the
+  right places. There are 21 billion ways to choose 8 locations out of 118. Which computer should pick, and
+  does the answer change when the rules change?</div>
   <div class="panel grow"><div class="phead">The test we set</div>
-  <div class="scroll" style="padding:18px 22px;font-size:14px;line-height:1.75;color:var(--dim);max-width:1000px">
-  <b style="color:var(--ink);font-size:15px">The grid.</b> A standard 118-substation test network used by
-  power engineers worldwide, based on the real American Electric Power system in Ohio.<br><br>
-  <b style="color:var(--ink);font-size:15px">The stress.</b> A 400 MW AI data centre plugs in, and then the
-  worst weather day of 2022 arrives: Winter Storm Elliott, minus 9.6 degrees, heating demand surging 24 percent.
-  On that day the network cannot safely carry everything people are asking of it.<br><br>
-  <b style="color:var(--ink);font-size:15px">The decision.</b> Place 8 batteries, 100 MW each. Good placement
-  keeps demand flowing. Bad placement wastes a billion-dollar investment.<br><br>
-  <b style="color:var(--ink);font-size:15px">The contest.</b> Five different computer methods, including a
-  D-Wave quantum hybrid, each given exactly 120 seconds. Same problem, same clock, same scoring.
-  One of them can also <i>prove</i> its answer is the best possible, which gives us a yardstick almost no
-  benchmark has.
+  <div class="scroll" style="padding:16px 22px;font-size:13.5px;line-height:1.7;color:var(--dim);max-width:1000px">
+  <b style="color:var(--ink)">The grid.</b> A standard 118-substation test network used by power engineers
+  worldwide, based on the real American Electric Power system in Ohio.<br><br>
+  <b style="color:var(--ink)">The stress.</b> A 400 MW AI data centre plugs in, and then the worst weather day
+  of 2022 arrives: Winter Storm Elliott, minus 9.6 degrees, heating demand surging 24 percent. On that day the
+  network cannot safely carry everything people are asking of it.<br><br>
+  <b style="color:var(--ink)">The decision.</b> Place 8 batteries, 100 MW each. Good placement keeps demand
+  flowing. Bad placement wastes a billion-dollar investment.<br><br>
+  <b style="color:var(--ink)">Two kinds of decision, tested separately.</b> Case 1, the operational one, is
+  when something changes and the answer is needed now: a budget is cut, a site is refused, a charging hub
+  grows. There is no time to rewrite the software, so every method has to work exactly as it already is.
+  Case 2, the strategic one, is long-term planning for extreme weather, where there is time to build the best
+  possible model, check it and tune it. Same grid, same physics; only the time available is different.<br><br>
+  <b style="color:var(--ink)">The contest.</b> Five computer methods, including a D-Wave quantum hybrid, each
+  given exactly 120 seconds. Same problem, same clock, same scoring. In Case 2 one of them can also
+  <i>prove</i> its answer is the best possible, which gives a yardstick almost no benchmark has. In Case 1
+  that proof is unavailable to every method, so the results rest on repeated runs instead.
   </div>
   <div class="note">Everything on this site is a measured result. Nothing is simulated for demonstration.</div></div>
 </div>
@@ -225,12 +230,13 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
 <div class="view" id="v1">
   <h2>The result</h2>
   <div class="subtabs">
-    <button class="on" data-c="c1">Case 1 · When the rules change overnight</button>
-    <button data-c="c2">Case 2 · The design-event benchmark</button>
+    <button class="on" data-c="c1">Case 1 · Operational: decide fast, no time to rebuild</button>
+    <button data-c="c2">Case 2 · Strategic: long-term extreme weather plan</button>
   </div>
   <div class="sub on" id="c1">
-    <div class="say tight">A spending cap appears, or an EV hub surges, and the plan must be redone now,
-    with the tools as they exist. No time to re-engineer anything.</div>
+    <div class="say tight">Decisions that must be made quickly, often automatically: a budget is cut, a site is
+    refused, a charging hub grows. There is no time to rewrite the algorithm, so every method has to work
+    exactly as it already is.</div>
     <div class="kwrap">
     <div class="ktwin">
       <div class="panel"><div class="phead">Demand kept flowing, tools used exactly as they are · longer is better</div>
@@ -266,9 +272,9 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
     </div>
   </div>
   <div class="sub" id="c2">
-    <div class="say tight">The benchmark case: the worst weather day, no last-minute changes, every method
-    given its best shot at equal time. Two methods tied for the best answer; one needed a rare specialist,
-    the other did not.</div>
+    <div class="say tight">Long-term planning: where to put storage so the network survives the worst weather
+    years from now. There is time here to build the best possible model, check it and tune it. Two methods
+    tied for the best answer; one needed a rare specialist, the other did not.</div>
     <div class="twin">
     <div class="pair">
       <div class="panel"><div class="phead">1 · How good is the answer? · longer is better</div>
@@ -310,8 +316,8 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
 <div class="view" id="v2">
   <h2>The plans</h2>
   <div class="subtabs">
-    <button class="on" data-c="m1">Map 1 · when the rules change</button>
-    <button data-c="m2">Map 2 · the design-event benchmark</button>
+    <button class="on" data-c="m1">Map 1 · operational case</button>
+    <button data-c="m2">Map 2 · strategic case</button>
   </div>
   <div class="sub on" id="m1">
     <div class="panel grow tall">
