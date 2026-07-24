@@ -541,23 +541,30 @@ const KM=[
   buses:[5,17,22,25,28,55,114,115],note:'respected the budget, lost by 21-35 MW on every run'},
  {id:'knaive',name:'Greedy, unmodified',score:5313.1,color:'#DC2626',
   buses:[5,23,25,27,28,55],note:'BROKE: overspent early, placed only 6 of 8 batteries'}];
-// bars
+// bars: grouped by availability on the day
 (function(){
  const wrap=document.getElementById('kbars');
- const prot=KM.map(m=>[m,KEXP-m.score]);
- const bmax=Math.max(...prot.map(p=>p[1]));
+ const NOW=['kstride','ksa','kmilp','knaive'], LATER=['kgreedy'];
+ const all=KM.map(m=>KEXP-m.score); const bmax=Math.max(...all);
  const blo=7400, bhi=bmax+40;
- prot.forEach(([m,v])=>{
-  const pct=(v-blo)/(bhi-blo)*100, win=Math.abs(v-bmax)<0.05;
+ const row=(m,grey)=>{const v=KEXP-m.score;
+  const pct=(v-blo)/(bhi-blo)*100, win=!grey&&Math.abs(v-bmax)<0.05;
   const d=document.createElement('div');d.className='brow';
-  d.innerHTML='<div class="nm">'+m.name+'</div>'
+  d.innerHTML='<div class="nm">'+m.name.replace('Greedy, rebuilt cost-aware','Greedy, after repair')+'</div>'
    +'<div class="btrack"><div class="bfill" style="width:'+Math.max(pct,2)+'%;background:'+m.color
-   +';opacity:'+(win?1:.6)+'">'+(win?'<span class="badge">BEST</span>':'')+'</div></div>'
+   +';opacity:'+(grey?.38:(win?1:.6))+'">'+(win?'<span class="badge">BEST</span>':'')+'</div></div>'
    +'<div class="v"><b>'+v.toLocaleString(undefined,{maximumFractionDigits:0})+' MW</b></div>';
-  wrap.appendChild(d);});
+  wrap.appendChild(d);};
+ const glab=t=>{const g=document.createElement('div');
+  g.style.cssText='font-family:var(--mono);font-size:9.5px;letter-spacing:.12em;color:var(--mut);margin:7px 0 2px';
+  g.textContent=t;wrap.appendChild(g);};
+ glab('AVAILABLE IMMEDIATELY, THE DAY THE RULE CHANGES');
+ NOW.forEach(id=>row(KM.find(m=>m.id===id),false));
+ glab('ONLY AFTER DAYS OF ENGINEERING REPAIR');
+ LATER.forEach(id=>row(KM.find(m=>m.id===id),true));
  const c=document.createElement('div');
- c.style.cssText='font-size:10.5px;color:#7C8AA0;margin-top:6px;padding-left:182px';
- c.innerHTML='The unmodified greedy bar is not a mistake: it overspent and could not finish its plan.';
+ c.style.cssText='font-size:10.5px;color:#7C8AA0;margin-top:5px';
+ c.innerHTML='On the day, the hybrid wins outright. The repaired greedy ties it, but the repair is exactly the time a fast-moving situation does not give you.';
  wrap.appendChild(c);})();
 // map
 const KMAP=L.map('mapK',{scrollWheelZoom:true}).setView([40.1,-82.7],6.2);
