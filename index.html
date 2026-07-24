@@ -124,6 +124,12 @@ border-radius:4px;display:inline-block}
 .ecert{font-size:12px;color:var(--mut)}
 .ecol ul{margin:13px 0 11px 18px;padding:0;font-size:13px;color:var(--dim)}.ecol li{margin:6px 0}
 .efoot{font-size:13px;font-weight:600;border-top:1px solid var(--line);padding-top:9px;margin-top:4px}
+.ktwin{display:grid;grid-template-columns:1.05fr 1fr;gap:10px;flex:1;min-height:0}
+.kleft{display:grid;grid-template-rows:auto 1fr;gap:10px;min-height:0}
+.story{padding:11px 16px;font-size:12.6px;line-height:1.55;color:var(--dim);overflow:auto}
+.story p{margin:0 0 9px}
+.story b{color:var(--ink)}
+@media(max-width:1000px){.ktwin{grid-template-columns:1fr}}
 .vchart{flex:1;display:grid;grid-template-columns:40px 1fr 42px;gap:8px;padding:10px 16px 4px;min-height:0}
 .vchart.solo{grid-template-columns:52px 1fr}
 .ylab{display:flex;flex-direction:column;justify-content:space-between;font-family:var(--mono);
@@ -274,9 +280,27 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
   <div class="say tight">Real sites cost different amounts, and plans must fit a budget. We capped spending so
   the old favourite plan was unaffordable, for every method equally. The everyday greedy method broke.
   The quantum hybrid, unchanged, came first.</div>
-  <div class="twin">
+  <div class="ktwin">
+    <div class="kleft">
     <div class="panel"><div class="phead">Demand kept flowing under the budget · longer is better</div>
       <div class="bars" id="kbars"></div>
+    </div>
+    <div class="panel"><div class="phead">When this matters</div>
+      <div class="story">
+      <p>Real planning is a stream of what-ifs. New budget, a refused site, a bigger data centre. And some
+      changes don't wait for a study: a line goes down, or an EV charging hub suddenly pulls far more power
+      than planned, and the plan must be redone <i>now</i>.</p>
+      <p>Our test showed what happens when just one new rule appears. A spending cap, and the standard method
+      didn't error, it quietly returned plans with two batteries missing. A wrong answer that looks right,
+      flowing straight into someone's decision.</p>
+      <p>We fixed it, but that took an engineer: time to notice, time to understand why it broke, time to
+      rebuild and recheck. Hours or days, while the pipeline keeps running on wrong answers. For the broken
+      line or the surging chargers, the fix arrives after the moment that needed it.</p>
+      <p><b>The hybrid took the new rule as one extra line, same right answer, every run, straight away.
+      When the grid changes faster than a method can be re-tuned, the method that never needs re-tuning
+      wins.</b></p>
+      </div>
+    </div>
     </div>
     <div class="panel grow"><div class="phead">The plans under the budget</div>
       <div class="hhead one">
