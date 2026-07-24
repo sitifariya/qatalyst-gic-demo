@@ -46,12 +46,12 @@ letter-spacing:.11em;text-transform:uppercase;padding:6px 12px;flex:none}
 border-radius:9px;padding:10px 15px}
 .chip b{display:block;font-family:var(--mono);font-size:20px}
 .chip span{font-size:11.5px;color:var(--mut)}
-.twin{display:grid;grid-template-rows:minmax(0,0.85fr) minmax(240px,1fr);gap:10px;flex:1;min-height:0}
+.twin{display:grid;grid-template-rows:minmax(230px,1.1fr) minmax(200px,1fr);gap:10px;flex:1;min-height:0}
 .pair{display:grid;grid-template-columns:1fr 1.15fr;gap:10px;min-height:0}
 .pair .panel{min-height:0;overflow:hidden}
 @media(max-width:1100px){.pair{grid-template-columns:1fr}}
 .twin .panel{min-height:0}
-.bars{padding:10px 14px 12px}
+.bars{padding:10px 14px 12px;overflow:auto;min-height:0}
 .costs{padding:2px 0 0;overflow:auto;flex:1;min-height:0}
 .crow{display:grid;grid-template-columns:104px 1fr 78px 96px;gap:7px;padding:6px 12px;
 align-items:center;font-size:11.8px;line-height:1.35;border-bottom:1px solid var(--line)}
@@ -130,7 +130,8 @@ border-radius:4px;display:inline-block}
 .ecert{font-size:12px;color:var(--mut)}
 .ecol ul{margin:13px 0 11px 18px;padding:0;font-size:13px;color:var(--dim)}.ecol li{margin:6px 0}
 .efoot{font-size:13px;font-weight:600;border-top:1px solid var(--line);padding-top:9px;margin-top:4px}
-.ktwin{display:grid;grid-template-columns:1.05fr 1fr;gap:10px;flex:1;min-height:0}
+.kwrap{display:grid;grid-template-rows:minmax(0,1fr) auto;gap:10px;flex:1;min-height:0}
+.ktwin{display:grid;grid-template-columns:1.05fr 1fr;gap:10px;min-height:0}
 .kleft{display:grid;grid-template-rows:auto 1fr;gap:10px;min-height:0}
 .story{padding:11px 16px;font-size:12.6px;line-height:1.55;color:var(--dim);overflow:auto}
 .story p{margin:0 0 9px}
@@ -171,7 +172,7 @@ border-bottom:1px dashed var(--line);font-size:12.5px;color:var(--dim)}
 .lrow .amt{font-family:var(--mono);font-weight:700;color:var(--ink);font-size:13px}
 .lrow.tot{border-bottom:2px solid var(--ink);color:var(--ink);font-weight:700}
 .lrow.gain{color:var(--gold)}.lrow.gain .amt{color:var(--gold);font-size:15px}
-.money{display:grid;grid-template-rows:1fr 1fr;gap:11px;padding:13px}
+.money{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:12px}
 .mcard{border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:9px;padding:14px 18px}
 .mcard b{font-family:var(--mono);font-size:21px;color:var(--gold)}
 .mcard div{font-size:12.5px;color:var(--dim);margin-top:4px}
@@ -230,6 +231,7 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
   <div class="sub on" id="c1">
     <div class="say tight">A spending cap appears, or an EV hub surges, and the plan must be redone now,
     with the tools as they exist. No time to re-engineer anything.</div>
+    <div class="kwrap">
     <div class="ktwin">
       <div class="panel"><div class="phead">Demand kept flowing, tools used exactly as they are · longer is better</div>
         <div class="bars" id="kbars"></div>
@@ -247,6 +249,15 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
         re-tuning wins.</b></p>
         </div>
       </div>
+    </div>
+    <div class="panel key"><div class="phead key">★ KEY FINDING · ON THE DAY, SPEED IS MONEY</div>
+      <div class="money">
+        <div class="mcard"><b>$0.5M – $1M</b><div>saved per severe event by the hybrid over the best
+        alternative available that day (24.6 MW more kept flowing × 4 h × $5–10k per MWh)</div></div>
+        <div class="mcard"><b>$44M – $89M</b><div>at stake per event if the silently broken plan were
+        trusted and deployed (2,213 MW short, same assumptions)</div></div>
+      </div>
+    </div>
     </div>
   </div>
   <div class="sub" id="c2">
