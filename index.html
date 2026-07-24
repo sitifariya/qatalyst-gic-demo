@@ -287,9 +287,10 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
         <div class="mapbox" id="mapK"></div>
         <div class="floatcard" id="kSay"></div>
       </div>
-      <div class="note">One extra line in the hybrid's problem description handled the budget. The greedy
-      method had to be rebuilt by hand to cope; the exact solver stayed collapsed. First run shown;
-      repeat runs in progress and this page will state if they disagree.</div>
+      <div class="note">Replicated: three runs across two budget settings. The hybrid finished first or
+      joint-first in every run with an identical plan each time. The rebuilt greedy tied twice and lost once
+      to its own time limit; annealing lost every run; the exact solver collapsed every run. One extra line
+      in the hybrid's problem description handled the budget; no other method survived unmodified.</div>
     </div>
   </div>
 </div>
@@ -303,7 +304,7 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
   <tr><td>Easy version: just make the average day better</td><td>Greedy, a classical algorithm</td><td>Gets 99.6% of the best possible in 2.2 seconds. Nothing can beat it, so nothing should try.</td></tr>
   <tr><td>Hard version, and you have a specialist</td><td>Exact solver (MILP)</td><td>Finds the best possible answer and proves it. Wins or ties every fair race.</td></tr>
   <tr class="hot"><td>Hard version, and you don't have a specialist</td><td>Quantum hybrid (D-Wave Stride)</td><td>Beat every conventional method 5 times out of 5, and matched the proven best answer. This is quantum's region.</td></tr>
-  <tr class="hot"><td>Realistic budgeted siting: sites cost different amounts, hard spending cap</td><td>Quantum hybrid (D-Wave Stride)</td><td>The everyday greedy method breaks outright (cannot even fill its battery quota); simulated annealing loses by 0.7%; the exact solver collapses (51% gap). Only a hand-rebuilt, cost-aware greedy ties the hybrid. Stride ran unchanged.</td></tr>
+  <tr class="hot"><td>Realistic budgeted siting: sites cost different amounts, hard spending cap</td><td>Quantum hybrid (D-Wave Stride)</td><td>Replicated over three runs, two budget settings: the hybrid first or joint-first every time, identical plan, zero spread. Everyday greedy breaks outright; a hand-rebuilt greedy ties when its repair beats the clock; annealing and the exact solver lose every run. Stride ran unchanged.</td></tr>
   <tr><td>Hardest physics: batteries can accidentally make some lines worse</td><td>Dead heat</td><td>The hybrid and the greedy method converge on the identical plan (3,098.4 MW, same eight sites). The exact solver collapses completely here.</td></tr>
   <tr><td>Splitting the grid into self-sufficient islands</td><td>Specialist graph algorithm</td><td>A free method scores better in under a second than the hybrid does. Exact solvers time out entirely.</td></tr>
   <tr><td>Delivery van routing</td><td>Classical routing software (OR-Tools)</td><td>Reached the mathematically proven best route. The quantum hybrid came 0.13% behind.</td></tr>
@@ -506,14 +507,14 @@ window.L1={m:M};window.R1={m:M};
 // ---------------- budget test ----------------
 const KEXP=12811.3;
 const KM=[
- {id:'kstride',name:'Quantum hybrid (Stride)',score:3099.6,color:'#7C3AED',
-  buses:[1,5,23,25,28,55,114,115],note:'ran unchanged, budget was one extra line'},
- {id:'kgreedy',name:'Greedy, rebuilt cost-aware',score:3099.6,color:'#059669',
-  buses:[1,5,23,25,28,55,114,115],note:'ties, but only after hand repair'},
- {id:'kmilp',name:'Exact solver (MILP)',score:3099.9,color:'#2563EB',
-  buses:[4,5,23,25,28,55,114,115],note:'still collapsed: 51% gap, no useful certificate'},
- {id:'ksa',name:'Simulated annealing',score:3120.8,color:'#D97706',
-  buses:[5,7,21,23,25,32,55,113],note:'respected the budget, lost by 21 MW'},
+ {id:'kstride',name:'Quantum hybrid (Stride)',score:3100.1,color:'#7C3AED',
+  buses:[5,7,23,25,28,55,114,115],note:'ran unchanged; identical answer every run, on both budget instances'},
+ {id:'kgreedy',name:'Greedy, rebuilt cost-aware',score:3100.1,color:'#059669',
+  buses:[5,7,23,25,28,55,114,115],note:'ties when its repair finishes in time; on one run it hit the clock and lost by 62 MW'},
+ {id:'kmilp',name:'Exact solver (MILP)',score:4189.5,color:'#2563EB',
+  buses:[5,23,25,28,55,89,114,115],note:'collapsed on every run: 51-67% gap, no useful certificate'},
+ {id:'ksa',name:'Simulated annealing',score:3124.7,color:'#D97706',
+  buses:[5,17,22,25,28,55,114,115],note:'respected the budget, lost by 21-35 MW on every run'},
  {id:'knaive',name:'Greedy, unmodified',score:5313.1,color:'#DC2626',
   buses:[5,23,25,27,28,55],note:'BROKE: overspent early, placed only 6 of 8 batteries'}];
 // bars
