@@ -270,20 +270,23 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
 
 <div class="view" id="v5">
   <h2>Where quantum wins, and where it doesn't</h2>
-  <div class="say">We tested seven kinds of problem. Quantum-based methods lead in one of them.
-  We report the other six just as clearly.</div>
+  <div class="say">We tested eight kinds of problem. The quantum hybrid leads in two, including the most
+  realistic one: siting under a real budget. We report the rest just as clearly, including where it loses.</div>
   <div class="panel grow"><div class="scroll"><table>
   <tr><th>Kind of problem</th><th>What wins</th><th>What we measured</th></tr>
   <tr><td>Easy version: just make the average day better</td><td>Greedy, a classical algorithm</td><td>Gets 99.6% of the best possible in 2.2 seconds. Nothing can beat it, so nothing should try.</td></tr>
   <tr><td>Hard version, and you have a specialist</td><td>Exact solver (MILP)</td><td>Finds the best possible answer and proves it. Wins or ties every fair race.</td></tr>
   <tr class="hot"><td>Hard version, and you don't have a specialist</td><td>Quantum hybrid (D-Wave Stride)</td><td>Beat every conventional method 5 times out of 5, and matched the proven best answer. This is quantum's region.</td></tr>
-  <tr><td>Hardest version: batteries can accidentally make some lines worse</td><td>Greedy, a classical algorithm</td><td>The exact solver collapses completely here. The hybrid ties the shortcut method almost exactly.</td></tr>
+  <tr class="hot"><td>Realistic budgeted siting: sites cost different amounts, hard spending cap</td><td>Quantum hybrid (D-Wave Stride)</td><td>The everyday greedy method breaks outright (cannot even fill its battery quota); simulated annealing loses by 0.7%; the exact solver collapses (51% gap). Only a hand-rebuilt, cost-aware greedy ties the hybrid. Stride ran unchanged.</td></tr>
+  <tr><td>Hardest physics: batteries can accidentally make some lines worse</td><td>Dead heat</td><td>The hybrid and the greedy method converge on the identical plan (3,098.4 MW, same eight sites). The exact solver collapses completely here.</td></tr>
   <tr><td>Splitting the grid into self-sufficient islands</td><td>Specialist graph algorithm</td><td>A free method scores better in under a second than the hybrid does. Exact solvers time out entirely.</td></tr>
   <tr><td>Delivery van routing</td><td>Classical routing software (OR-Tools)</td><td>Reached the mathematically proven best route. The quantum hybrid came 0.13% behind.</td></tr>
   <tr><td>Running directly on quantum hardware</td><td>Not possible yet</td><td>Needs around 31,000 qubits for this grid. Today's machines don't have them.</td></tr>
   </table></div>
-  <div class="note">Three of these seven are won by cheap classical methods, and we say so. A map of where a
-  technology does not help is worth more than a claim that it always does.</div></div>
+  <div class="note">Cheap classical methods still win three of these outright, and we say so. The pattern:
+  the more constraints and messy physics a problem carries, the more the ready-made classical tools need expert
+  repair, and the better the hybrid looks taken as it is. A map of where a technology does not help is worth
+  more than a claim that it always does.</div></div>
 </div>
 
 <div class="view" id="v6">
@@ -301,6 +304,12 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
   <b style="color:var(--ink)">Where the certainty comes from.</b> One method can prove its answer is the best
   possible. That proof is what lets us say how far every other method is from perfect, instead of just
   comparing them to each other.<br><br>
+  <b style="color:var(--ink)">The budget experiment.</b> After the main campaign we added the most realistic
+  variant: every substation has its own build cost (busier sites cost more) and the plan must fit a hard
+  spending cap set so the old favourite plan is unaffordable. Every method faced the identical constraint.
+  The everyday greedy method broke, spending its budget on expensive sites and finishing with only six of
+  eight batteries. We then rebuilt greedy to shop by value for money, and that repaired version ties the
+  hybrid. The hybrid itself needed no change at all: the budget was one extra line in its problem description.<br><br>
   <b style="color:var(--ink)">Mistakes we found and corrected.</b> An early result suggesting a 45% quantum
   win did not reproduce, so we withdrew it. One version of our scoring was physically wrong and was rebuilt.
   An early comparison gave methods unequal time, and was redone. We once described the hybrid's answer as
