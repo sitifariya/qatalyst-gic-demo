@@ -181,6 +181,7 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
   <a data-v="v0" class="on"><span class="i">▶</span> The question</a>
   <a data-v="v1"><span class="i">▤</span> The result</a>
   <a data-v="v2"><span class="i">◉</span> The plans</a>
+  <a data-v="v7"><span class="i">£</span> The budget test <span style="font-size:8.5px;background:var(--gold);color:#fff;border-radius:8px;padding:1px 6px;vertical-align:1px">NEW</span></a>
   <div class="grp">THE FULL PICTURE</div>
   <a data-v="v5"><span class="i">▦</span> Where quantum wins</a>
   <a data-v="v6"><span class="i">ⓘ</span> How we tested</a>
@@ -265,6 +266,31 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
     <div class="note"><b style="color:var(--ink)">Click any substation for its detail.</b>
     Colour shows how loaded it is: red is heaviest, amber is stretched, grey is comfortable. Batteries cluster where the trouble is. The purple star is the 400 MW AI
     data centre. Scroll to zoom. Map layout is illustrative; the network and the results are real.</div>
+  </div>
+</div>
+
+<div class="view" id="v7">
+  <h2>The budget test: the most realistic problem, and the clearest win</h2>
+  <div class="say tight">Real sites cost different amounts, and plans must fit a budget. We capped spending so
+  the old favourite plan was unaffordable, for every method equally. The everyday greedy method broke.
+  The quantum hybrid, unchanged, came first.</div>
+  <div class="twin">
+    <div class="panel"><div class="phead">Demand kept flowing under the budget · longer is better</div>
+      <div class="bars" id="kbars"></div>
+    </div>
+    <div class="panel grow"><div class="phead">The plans under the budget</div>
+      <div class="hhead one">
+        <span class="mtitle big">Stride vs</span>
+        <div class="selwrap"><select id="kpick" class="msel"></select><span class="caret">▾</span></div>
+      </div>
+      <div class="maphold">
+        <div class="mapbox" id="mapK"></div>
+        <div class="floatcard" id="kSay"></div>
+      </div>
+      <div class="note">One extra line in the hybrid's problem description handled the budget. The greedy
+      method had to be rebuilt by hand to cope; the exact solver stayed collapsed. First run shown;
+      repeat runs in progress and this page will state if they disagree.</div>
+    </div>
   </div>
 </div>
 
@@ -477,4 +503,72 @@ pick.addEventListener('change',()=>drawPlans(pick.value));
 document.getElementById('soloBtn').addEventListener('click',drawSolo);
 drawSolo();
 window.L1={m:M};window.R1={m:M};
+// ---------------- budget test ----------------
+const KEXP=12811.3;
+const KM=[
+ {id:'kstride',name:'Quantum hybrid (Stride)',score:3099.6,color:'#7C3AED',
+  buses:[1,5,23,25,28,55,114,115],note:'ran unchanged, budget was one extra line'},
+ {id:'kgreedy',name:'Greedy, rebuilt cost-aware',score:3099.6,color:'#059669',
+  buses:[1,5,23,25,28,55,114,115],note:'ties, but only after hand repair'},
+ {id:'kmilp',name:'Exact solver (MILP)',score:3099.9,color:'#2563EB',
+  buses:[4,5,23,25,28,55,114,115],note:'still collapsed: 51% gap, no useful certificate'},
+ {id:'ksa',name:'Simulated annealing',score:3120.8,color:'#D97706',
+  buses:[5,7,21,23,25,32,55,113],note:'respected the budget, lost by 21 MW'},
+ {id:'knaive',name:'Greedy, unmodified',score:5313.1,color:'#DC2626',
+  buses:[5,23,25,27,28,55],note:'BROKE: overspent early, placed only 6 of 8 batteries'}];
+// bars
+(function(){
+ const wrap=document.getElementById('kbars');
+ const prot=KM.map(m=>[m,KEXP-m.score]);
+ const bmax=Math.max(...prot.map(p=>p[1]));
+ const blo=7400, bhi=bmax+40;
+ prot.forEach(([m,v])=>{
+  const pct=(v-blo)/(bhi-blo)*100, win=Math.abs(v-bmax)<0.05;
+  const d=document.createElement('div');d.className='brow';
+  d.innerHTML='<div class="nm">'+m.name+'</div>'
+   +'<div class="btrack"><div class="bfill" style="width:'+Math.max(pct,2)+'%;background:'+m.color
+   +';opacity:'+(win?1:.6)+'">'+(win?'<span class="badge">BEST</span>':'')+'</div></div>'
+   +'<div class="v"><b>'+v.toLocaleString(undefined,{maximumFractionDigits:0})+' MW</b></div>';
+  wrap.appendChild(d);});
+ const c=document.createElement('div');
+ c.style.cssText='font-size:10.5px;color:#7C8AA0;margin-top:6px;padding-left:182px';
+ c.innerHTML='The unmodified greedy bar is not a mistake: it overspent and could not finish its plan.';
+ wrap.appendChild(c);})();
+// map
+const KMAP=L.map('mapK',{scrollWheelZoom:true}).setView([40.1,-82.7],6.2);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{attribution:'© OSM © CARTO'}).addTo(KMAP);
+GRID.lines.forEach(l=>{const a=AT[l.a],b=AT[l.b];
+ if(a&&b)L.polyline([a,b],{color:'#98A2B3',weight:1,opacity:.45,interactive:false}).addTo(KMAP);});
+GRID.buses.forEach(b=>{const r=b.load/lmax;
+ L.circleMarker(AT[b.id],{radius:3+r*8,color:'#fff',weight:1,
+  fillColor:r>0.55?'#DC2626':r>0.28?'#D97706':'#94A3B8',
+  fillOpacity:r>0.28?.7:.45}).addTo(KMAP)
+  .bindTooltip('Substation '+b.id.replace('Bus','')+' · site cost '+(1+b.load*118/GRID.buses.reduce((s,x)=>s+x.load,0)).toFixed(2)+' units');});
+let kLayer=[];
+const KL=KM[0];
+function kShow(id){
+ const m=KM.find(x=>x.id===id);
+ document.getElementById('kpick').value=id;
+ kLayer.forEach(x=>KMAP.removeLayer(x));kLayer=[];
+ const shared=KL.buses.filter(b=>m.buses.includes(b));
+ const both=(n,col,strong,txt)=>{const p=AT['Bus'+n];if(!p)return;
+  kLayer.push(L.circleMarker(p,{radius:12,color:col,weight:strong?4.5:3,fillColor:col,
+   fillOpacity:strong?.25:.13,dashArray:strong?null:'5,4'}).addTo(KMAP).bindTooltip(txt+' · Substation '+n));};
+ shared.forEach(n=>both(n,'#059669',true,'Both chose it'));
+ KL.buses.filter(b=>!m.buses.includes(b)).forEach(n=>both(n,'#7C3AED',false,'Only Stride'));
+ m.buses.filter(b=>!KL.buses.includes(b)).forEach(n=>both(n,m.color,false,'Only '+m.name));
+ const pL=(KEXP-KL.score).toLocaleString(undefined,{maximumFractionDigits:0});
+ const pR=(KEXP-m.score).toLocaleString(undefined,{maximumFractionDigits:0});
+ document.getElementById('kSay').innerHTML=
+  '<div style="font-size:12.5px;margin-bottom:5px"><b style="color:#7C3AED">Stride: '+pL+' MW</b>'
+  +' &nbsp;·&nbsp; <b style="color:'+m.color+'">'+m.name+': '+pR+' MW</b></div>'
+  +'<div style="font-size:12px">'+m.note+(m.id==='knaive'?'. Its six purple-less circles below tell the story: two batteries missing.':'')+'</div>';}
+const kp=document.getElementById('kpick');
+KM.filter(m=>m.id!=='kstride').forEach(m=>{const o=document.createElement('option');
+ o.value=m.id;o.textContent=m.name;kp.appendChild(o);});
+kp.addEventListener('change',()=>kShow(kp.value));
+kShow('kgreedy');
+// map resize on tab switch
+document.querySelectorAll('.rail a').forEach(a=>a.addEventListener('click',()=>{
+ setTimeout(()=>{try{KMAP.invalidateSize();}catch(e){}},80);}));
 </script></body></html>
