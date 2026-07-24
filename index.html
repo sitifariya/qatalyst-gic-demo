@@ -250,13 +250,13 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
         </div>
       </div>
     </div>
-    <div class="panel key"><div class="phead key">★ KEY FINDING · ON THE DAY, SPEED IS MONEY</div>
-      <div class="money">
-        <div class="mcard"><b>$0.5M – $1M</b><div>saved per severe event by the hybrid over the best
-        alternative available that day (24.6 MW more kept flowing × 4 h × $5–10k per MWh)</div></div>
-        <div class="mcard"><b>$44M – $89M</b><div>at stake per event if the silently broken plan were
-        trusted and deployed (2,213 MW short, same assumptions)</div></div>
+    <div class="panel key"><div class="phead key">★ KEY FINDING · WHAT EACH TOOL COSTS YOU ON THE DAY, PER SEVERE EVENT</div>
+      <div class="vchart solo">
+        <div class="ylab left"><span>$90M</span><span>$60M</span><span>$30M</span><span>0</span></div>
+        <div class="cols" id="kmoney"></div>
       </div>
+      <div class="vkey"><span style="color:var(--ink)"><b>Bars show value lost against the best plan available that day.</b></span>
+      <span>4-hour event, $5,000–10,000 per MWh unserved; upper bound shown.</span></div>
     </div>
     </div>
   </div>
@@ -318,8 +318,7 @@ tr.hot td{background:rgba(124,58,237,.07)}tr.hot td:nth-child(2){color:var(--acc
         <div class="mapbox" id="mapK"></div>
         <div class="floatcard" id="kSay"></div>
       </div>
-      <div class="note">Every method used exactly as it stands, the day the rule changed. The purple star is
-      the AI data centre; substation colour shows loading. Scroll to zoom.</div>
+      <div class="note">Every method used exactly as it stands, the day the rule changed. Scroll to zoom.</div>
     </div>
   </div>
   <div class="sub" id="m2">
@@ -610,12 +609,37 @@ function kShow(id){
  document.getElementById('kSay').innerHTML=
   '<div style="font-size:12.5px;margin-bottom:5px"><b style="color:#7C3AED">Stride: '+pL+' MW</b>'
   +' &nbsp;·&nbsp; <b style="color:'+m.color+'">'+m.name+': '+pR+' MW</b></div>'
-  +'<div style="font-size:12px">'+m.note+(m.id==='knaive'?'. Its six purple-less circles below tell the story: two batteries missing.':'')+'</div>';}
+  +'<div style="font-size:12px">'+m.note+(m.id==='knaive'?'. Only six circles for this method: two batteries it could not afford.':'')+'</div>'
+  +'<div class="legend2">'
+  +'<span><i class="lg" style="background:#059669"></i>both chose it</span>'
+  +'<span><i class="lg" style="background:#7C3AED"></i>only Stride</span>'
+  +'<span><i class="lg" style="background:'+m.color+'"></i>only the other</span>'
+  +'<span><i class="lg" style="background:#DC2626;opacity:.55"></i>heavily loaded</span>'
+  +'<span>★ data centre</span></div>';}
 const kp=document.getElementById('kpick');
 KM.filter(m=>m.id!=='kstride').forEach(m=>{const o=document.createElement('option');
  o.value=m.id;o.textContent=m.name;kp.appendChild(o);});
 kp.addEventListener('change',()=>kShow(kp.value));
 kShow('knaive');
+// case-1 money chart: value lost vs the best plan available that day
+(function(){
+ const w=document.getElementById('kmoney');
+ const best=Math.min(...KM.map(m=>m.score));
+ const PERMWH=10000, HOURS=4, MAXV=90e6;
+ const money=v=>v>=1e6?'$'+(v/1e6).toFixed(1)+'M':(v>0?'$'+Math.round(v/1000)+'k':'0');
+ KM.forEach(m=>{
+  const lost=(m.score-best)*HOURS*PERMWH;
+  const h=Math.max(lost>0?1.5:0,(lost/MAXV)*100), win=lost===0;
+  const d=document.createElement('div');d.className='col';
+  d.innerHTML='<div class="duo"><div class="vb wide" style="height:'+h+'%;background:'+m.color
+   +';opacity:'+(win?1:.8)+'"><span style="color:'+m.color+'">'+(win?'nothing lost ★':money(lost))+'</span></div></div>'
+   +'<div class="cname" style="color:'+m.color+'">'+m.name.replace(' (Stride)','').replace('Quantum hybrid','Quantum hybrid')
+   +'<i>'+(win?'best available that day':(m.score-best).toFixed(0)+' MW short')+'</i></div>';
+  w.appendChild(d);});
+ const c=document.createElement('div');
+ c.style.cssText='font-size:10.5px;color:#7C8AA0;margin-top:4px';
+ c.innerHTML='The unmodified greedy bar is the cost of a plan that looked valid but was missing two batteries.';
+ w.appendChild(c);})();
 // sub-tab switching
 document.querySelectorAll('.subtabs button').forEach(b=>b.addEventListener('click',()=>{
  const box=b.closest('.view');
